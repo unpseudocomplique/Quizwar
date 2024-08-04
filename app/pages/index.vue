@@ -1,8 +1,11 @@
 <script setup lang="ts">
 
+
 const currentQuestion = ref(null)
 const currentQuestionIndex = ref(0)
 const isGameOver = ref(false)
+const isGameStarted = ref(false)
+
 
 const quizz = ref([
   {
@@ -65,10 +68,10 @@ const quizz = ref([
   }
 ])
 
+
 currentQuestion.value = quizz.value[currentQuestionIndex.value]
 
 const getAnswer = (question, answer) => {
-  console.log(question, answer)
   const questionIndex = quizz.value.findIndex(item => item.id === question.id)
   if (questionIndex === -1) return;
 
@@ -96,8 +99,11 @@ const getAnswer = (question, answer) => {
       <UDashboardNavbar title="Home">
 
       </UDashboardNavbar>
-
-      <UDashboardPanelContent v-if="!isGameOver">
+      <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
+        <h1 class="text-2xl">Are you ready ?</h1>
+        <UButton @click="isGameStarted = true" color="green" size="xl">Start</UButton>
+      </UDashboardPanelContent>
+      <UDashboardPanelContent v-else-if="!isGameOver">
         <p>Question : {{ currentQuestionIndex + 1 }} / {{ quizz.length }}</p>
         <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
           @answer="getAnswer(currentQuestion, $event)"></game-question-item>

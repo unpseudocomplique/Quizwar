@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import { timeline } from "motion"
 import { TransitionPresets, useTransition, executeTransition } from '@vueuse/core'
+import ThemeSound from '~/assets/sounds/music-theme.mp3'
+import { useSound } from '@vueuse/sound'
 
 const question = defineModel()
 const emits = defineEmits(['answer'])
@@ -12,8 +13,6 @@ const showAnswers = ref(false)
 const output = ref(0)
 const showResult = ref(false)
 
-
-
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 
@@ -23,7 +22,10 @@ onMounted(() => {
         [imageRef.value, { opacity: [0, 1] }, { duration: 0.3 }],
         [questionRef.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
     ]
-    console.log(sequence)
+    const audio = new Audio(ThemeSound)
+    audio.loop = true
+
+    audio.play()
     const controles = timeline(sequence, {})
 
 
@@ -37,10 +39,11 @@ onMounted(() => {
             duration,
             transition: TransitionPresets.linear,
         })
-        console.timeEnd('animation')
         showResult.value = true
 
         emits('answer', question.value.answers.find(item => item.selected))
+
+        audio.pause()
 
     })
 })
