@@ -4,6 +4,7 @@ import { timeline } from "motion"
 import { TransitionPresets, useTransition, executeTransition } from '@vueuse/core'
 
 const question = defineModel()
+const emits = defineEmits(['answer'])
 
 const imageRef = ref()
 const questionRef = ref()
@@ -38,6 +39,9 @@ onMounted(() => {
         })
         console.timeEnd('animation')
         showResult.value = true
+
+        emits('answer', question.value.answers.find(item => item.selected))
+
     })
 })
 
