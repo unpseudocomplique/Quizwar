@@ -41,7 +41,7 @@ const quizz = ref([
   {
     id: 'daadadada',
     display: 'Pour les alcolos, quel est le nom de ce cocktail ?',
-    picture: '/Fiwebp.webp',
+    picture: '/fib.webp',
     questionDuration: 2,
     answerDuration: 6,
     rightAnswers: ['zadafzade'],
