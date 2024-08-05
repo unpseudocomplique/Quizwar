@@ -12,8 +12,9 @@ const quizz = ref([
     id: 'dadada',
     display: 'Quel est le nom de ce pont ?',
     picture: '/pont.webp',
-    questionDuration: 3,
-    answerDuration: 10,
+    questionDuration: 2,
+    answerDuration: 5,
+    rightAnswers: ['zfze'],
     answers: [
       {
         id: 'zfze',
@@ -39,29 +40,30 @@ const quizz = ref([
   },
   {
     id: 'daadadada',
-    display: 'Quel est le nom de ce pont autre question ?',
-    picture: '/pont.webp',
-    questionDuration: 3,
-    answerDuration: 10,
+    display: 'Pour les alcolos, quel est le nom de ce cocktail ?',
+    picture: '/Fiwebp.webp',
+    questionDuration: 2,
+    answerDuration: 6,
+    rightAnswers: ['zadafzade'],
     answers: [
       {
-        id: 'zadafze',
-        display: 'Golden bridge',
+        id: 'zadafzade',
+        display: 'Gin Fizz',
         selected: false
       },
       {
-        id: 'zfzeadaddad',
-        display: 'Golden shower',
+        id: 'zfzeadaddadad',
+        display: 'Americano',
         selected: false
       },
       {
-        id: 'zfzedadadaad',
-        display: 'Golden crow',
+        id: 'zfzedadadaaaad',
+        display: 'Apple Fizz',
         selected: false
       },
       {
-        id: 'zfzadadedaaad',
-        display: 'Golden boy',
+        id: 'aada',
+        display: 'Mai Tai',
         selected: false
       }
     ]
@@ -90,6 +92,18 @@ const getAnswer = (question, answer) => {
   currentQuestion.value = quizz.value[currentQuestionIndex.value]
 }
 
+const userScore = computed(() => {
+  const score = quizz.value.reduce((acc, item) => {
+    const userAnswers = item.answers.filter(answer => answer.selected).map(answer => answer.id)
+    const isUserRight = item.rightAnswers.length === userAnswers.length && item.rightAnswers.every(answer => userAnswers.includes(answer))
+
+    if (isUserRight) acc.rightAnswers++
+    else acc.wrongAnswers++
+    return acc
+  }, { rightAnswers: 0, wrongAnswers: 0 })
+  return score
+})
+
 
 </script>
 
@@ -109,8 +123,11 @@ const getAnswer = (question, answer) => {
           @answer="getAnswer(currentQuestion, $event)"></game-question-item>
       </UDashboardPanelContent>
       <UDashboardPanelContent v-else>
-        <p>Game Over</p>
-        <p>Did you won ? >_> </p>
+        <div class="flex flex-col items-center justify-center gap-4 h-full">
+
+          <p class="text-2xl">Game Over</p>
+          <p class="text-4xl font-bold uppercase">You scored {{ userScore.rightAnswers }} / {{ quizz.length }}</p>
+        </div>
       </UDashboardPanelContent>
     </UDashboardPanel>
   </UDashboardPage>
