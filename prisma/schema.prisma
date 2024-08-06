@@ -15,6 +15,8 @@ datasource db {
 model Quiz {
   id        String     @id @default(cuid())
   display     String
+  isDeleted Boolean @default(false)
+  isActive Boolean @default(true)
   questions QuizQuestion[]
 }
 
@@ -33,6 +35,8 @@ model Question {
   picture          String
   questionDuration Int
   answerDuration   Int
+  isDeleted        Boolean          @default(false)
+  isActive         Boolean          @default(true)
   rightAnswers     String[]         @default([])
   theme            String
   answers          Answer[]
@@ -44,6 +48,8 @@ model Answer {
   id        String   @id @default(cuid())
   display   String
   selected  Boolean
+  isDeleted Boolean @default(false)
+  isActive  Boolean @default(true)
   question  Question @relation(fields: [questionId], references: [id])
   questionId String
   isCorrect Boolean
@@ -52,6 +58,8 @@ model Answer {
 model Label {
   id    String   @id @default(cuid())
   display  String
+  isDeleted Boolean @default(false)
+  isActive  Boolean @default(true)
   questions QuestionLabel[]
 }
 
