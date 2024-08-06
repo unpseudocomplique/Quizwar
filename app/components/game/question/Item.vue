@@ -2,7 +2,6 @@
 import { timeline } from "motion"
 import { TransitionPresets, useTransition, executeTransition } from '@vueuse/core'
 import ThemeSound from '~/assets/sounds/music-theme.mp3'
-import { useSound } from '@vueuse/sound'
 
 const question = defineModel()
 const emits = defineEmits(['answer'])

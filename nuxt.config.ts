@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/image',
     '@formkit/auto-animate/nuxt',
+    "@prisma/nuxt"
   ],
   ui: {
     icons: ['heroicons', 'simple-icons'],

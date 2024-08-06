@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { labels } from '@unovis/ts/components/timeline/style';
+import { id } from 'date-fns/locale';
+
 
 
 const currentQuestion = ref(null)
@@ -7,7 +10,10 @@ const isGameOver = ref(false)
 const isGameStarted = ref(false)
 
 
-const quizz = ref([
+const quiz = ref({
+  id: 'dadadadada',
+  display: 'Test tes connaissances générales',
+  questions: [
   {
     id: 'dadada',
     display: 'Quel est le nom de ce pont ?',
@@ -15,73 +21,82 @@ const quizz = ref([
     questionDuration: 2,
     answerDuration: 5,
     rightAnswers: ['zfze'],
-    answers: [
-      {
-        id: 'zfze',
-        display: 'Golden bridge',
-        selected: false
-      },
-      {
-        id: 'zfzedad',
-        display: 'Golden shower',
-        selected: false
-      },
-      {
-        id: 'zfzedaad',
-        display: 'Golden crow',
-        selected: false
-      },
-      {
-        id: 'zfzedaaad',
-        display: 'Golden boy',
-        selected: false
-      }
-    ]
-  },
-  {
-    id: 'daadadada',
-    display: 'Pour les alcolos, quel est le nom de ce cocktail ?',
-    picture: '/fib.webp',
-    questionDuration: 2,
-    answerDuration: 6,
-    rightAnswers: ['zadafzade'],
-    answers: [
-      {
-        id: 'zadafzade',
-        display: 'Gin Fizz',
-        selected: false
-      },
-      {
-        id: 'zfzeadaddadad',
-        display: 'Americano',
-        selected: false
-      },
-      {
-        id: 'zfzedadadaaaad',
-        display: 'Apple Fizz',
-        selected: false
-      },
-      {
-        id: 'aada',
-        display: 'Mai Tai',
-        selected: false
-      }
-    ]
-  }
-])
+      labels: [
+        { labelId: '1', label: { id: '1', name: 'Pont' } },
+      ],
+      theme: 'Ponts du monde',
+      answers: [
+        {
+          id: 'zfze',
+          display: 'Golden bridge',
+          selected: false
+        },
+        {
+          id: 'zfzedad',
+          display: 'Golden shower',
+          selected: false
+        },
+        {
+          id: 'zfzedaad',
+          display: 'Golden crow',
+          selected: false
+        },
+        {
+          id: 'zfzedaaad',
+          display: 'Golden boy',
+          selected: false
+        }
+      ]
+    },
+    {
+      id: 'daadadada',
+      display: 'Pour les alcolos, quel est le nom de ce cocktail ?',
+      picture: '/fib.webp',
+      questionDuration: 2,
+      answerDuration: 6,
+      rightAnswers: ['zadafzade'],
+      labels: [
+        { labelId: '1', label: { id: '1', name: 'Cocktail' } },
+      ],
+      theme: 'Cocktails',
+      answers: [
+        {
+          id: 'zadafzade',
+          display: 'Gin Fizz',
+          selected: false
+        },
+        {
+          id: 'zfzeadaddadad',
+          display: 'Americano',
+          selected: false
+        },
+        {
+          id: 'zfzedadadaaaad',
+          display: 'Apple Fizz',
+          selected: false
+        },
+        {
+          id: 'aada',
+          display: 'Mai Tai',
+          selected: false
+        }
+      ]
+    }
+  ]
+})
 
 
-currentQuestion.value = quizz.value[currentQuestionIndex.value]
+currentQuestion.value = quiz.value.questions[currentQuestionIndex.value]
 
 const getAnswer = (question, answer) => {
-  const questionIndex = quizz.value.findIndex(item => item.id === question.id)
+  const questionIndex = quiz.value.questions.findIndex(item => item.id === question.id)
   if (questionIndex === -1) return;
 
-  const answerIndex = !answer ? -1 : quizz.value[questionIndex].answers.findIndex(item => item.id === answer.id)
+  const answerIndex = !answer ? -1 : quiz.value.questions[questionIndex].answers.findIndex(item => item.id === answer.id)
 
-  if (answerIndex > -1) quizz.value[questionIndex].answers[answerIndex].selected = true
+  if (answerIndex > -1) quiz.value[questionIndex].answers[answerIndex].selected = true
 
-  if (questionIndex === quizz.value.length - 1) {
+  if (questionIndex === quiz.value.questions.length - 1) {
     currentQuestion.value = null
     isGameOver.value = true
     return;
@@ -89,11 +104,11 @@ const getAnswer = (question, answer) => {
 
   currentQuestionIndex.value = questionIndex + 1
 
-  currentQuestion.value = quizz.value[currentQuestionIndex.value]
+  currentQuestion.value = quiz.value.questions[currentQuestionIndex.value]
 }
 
 const userScore = computed(() => {
-  const score = quizz.value.reduce((acc, item) => {
+  const score = quiz.value.questions.reduce((acc, item) => {
     const userAnswers = item.answers.filter(answer => answer.selected).map(answer => answer.id)
     const isUserRight = item.rightAnswers.length === userAnswers.length && item.rightAnswers.every(answer => userAnswers.includes(answer))
 
@@ -118,7 +133,7 @@ const userScore = computed(() => {
         <UButton @click="isGameStarted = true" color="green" size="xl">Start</UButton>
       </UDashboardPanelContent>
       <UDashboardPanelContent v-else-if="!isGameOver">
-        <p>Question : {{ currentQuestionIndex + 1 }} / {{ quizz.length }}</p>
+        <p>Question : {{ currentQuestionIndex + 1 }} / {{ quiz.questions.length }}</p>
         <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
           @answer="getAnswer(currentQuestion, $event)"></game-question-item>
       </UDashboardPanelContent>
