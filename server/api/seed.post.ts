@@ -1,10 +1,11 @@
 export default defineEventHandler(async (event) => {
     // Suppression des anciennes données
-    await prisma.quiz.deleteMany({});
-    await prisma.question.deleteMany({});
-    await prisma.answer.deleteMany({});
-    await prisma.label.deleteMany({});
     await prisma.questionLabel.deleteMany({});
+    await prisma.quizQuestion.deleteMany({});
+    await prisma.answer.deleteMany({});
+    await prisma.question.deleteMany({});
+    await prisma.label.deleteMany({});
+    await prisma.quiz.deleteMany({});
 
     // Création des nouvelles données
     const quiz = await prisma.quiz.create({
@@ -494,7 +495,7 @@ export default defineEventHandler(async (event) => {
                     }
                 ]
             }
-        });
-
+        }
+    });
     return quiz;
 });
