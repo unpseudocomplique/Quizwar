@@ -10,6 +10,11 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@formkit/auto-animate/nuxt'
   ],
+  nitro: {
+    experimental:{
+      websocket: true
+    }
+  },
   ui: {
     icons: ['heroicons', 'simple-icons'],
     safelistColors: ['primary', 'red', 'orange', 'green']
@@ -45,5 +50,6 @@ export default defineNuxtConfig({
     }
   },
 
-  compatibilityDate: '2024-07-11'
+  compatibilityDate: '2024-07-11',
+  
 })
