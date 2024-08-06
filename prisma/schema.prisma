@@ -46,6 +46,7 @@ model Answer {
   selected  Boolean
   question  Question @relation(fields: [questionId], references: [id])
   questionId String
+  isCorrect Boolean
 }
 
 model Label {
