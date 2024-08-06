@@ -1,50 +1,55 @@
 <script setup lang="ts">
-import { labels } from '@unovis/ts/components/timeline/style';
-import { id } from 'date-fns/locale';
 
-
+const { data: quizzes } = await useFetch('/api/quiz')
 
 const currentQuestion = ref(null)
 const currentQuestionIndex = ref(0)
 const isGameOver = ref(false)
 const isGameStarted = ref(false)
 
+const SeedDB = async () => {
+  await useFetch('/api/seed', { method: 'POST' })
+  alert('Seeded')
+}
 
 const quiz = ref({
   id: 'dadadadada',
   display: 'Test tes connaissances générales',
   questions: [
-  {
-    id: 'dadada',
-    display: 'Quel est le nom de ce pont ?',
-    picture: '/pont.webp',
-    questionDuration: 2,
-    answerDuration: 5,
-    rightAnswers: ['zfze'],
+    {
+      id: 'dadada',
+      display: 'Quel est le nom de ce pont ?',
+      picture: '/pont.webp',
+      questionDuration: 2,
+      answerDuration: 5,
       labels: [
-        { labelId: '1', label: { id: '1', name: 'Pont' } },
+        { labelId: '1', label: { id: '1', display: 'Pont' } },
       ],
       theme: 'Ponts du monde',
       answers: [
         {
           id: 'zfze',
           display: 'Golden bridge',
-          selected: false
+          selected: false,
+          isCorrect: true
         },
         {
           id: 'zfzedad',
           display: 'Golden shower',
-          selected: false
+          selected: false,
+          isCorrect: false
         },
         {
           id: 'zfzedaad',
           display: 'Golden crow',
-          selected: false
+          selected: false,
+          isCorrect: false
         },
         {
           id: 'zfzedaaad',
           display: 'Golden boy',
-          selected: false
+          selected: false,
+          isCorrect: false
         }
       ]
     },
@@ -54,31 +59,34 @@ const quiz = ref({
       picture: '/fib.webp',
       questionDuration: 2,
       answerDuration: 6,
-      rightAnswers: ['zadafzade'],
       labels: [
-        { labelId: '1', label: { id: '1', name: 'Cocktail' } },
+        { labelId: '1', label: { id: '1', display: 'Cocktail' } },
       ],
       theme: 'Cocktails',
       answers: [
         {
           id: 'zadafzade',
           display: 'Gin Fizz',
-          selected: false
+          selected: false,
+          isCorrect: true
         },
         {
           id: 'zfzeadaddadad',
           display: 'Americano',
-          selected: false
+          selected: false,
+          isCorrect: false
         },
         {
           id: 'zfzedadadaaaad',
           display: 'Apple Fizz',
-          selected: false
+          selected: false,
+          isCorrect: false
         },
         {
           id: 'aada',
           display: 'Mai Tai',
-          selected: false
+          selected: false,
+          isCorrect: false
         }
       ]
     }
@@ -109,8 +117,8 @@ const getAnswer = (question, answer) => {
 
 const userScore = computed(() => {
   const score = quiz.value.questions.reduce((acc, item) => {
-    const userAnswers = item.answers.filter(answer => answer.selected).map(answer => answer.id)
-    const isUserRight = item.rightAnswers.length === userAnswers.length && item.rightAnswers.every(answer => userAnswers.includes(answer))
+
+    const isUserRight = item.answers.every(answer => answer.selected === answer.isCorrect)
 
     if (isUserRight) acc.rightAnswers++
     else acc.wrongAnswers++
@@ -129,6 +137,9 @@ const userScore = computed(() => {
 
       </UDashboardNavbar>
       <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
+        <u-button @click="SeedDB">
+          Seed db
+        </u-button>
         <h1 class="text-2xl">Are you ready ?</h1>
         <UButton @click="isGameStarted = true" color="green" size="xl">Start</UButton>
       </UDashboardPanelContent>
