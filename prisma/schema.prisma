@@ -37,7 +37,6 @@ model Question {
   answerDuration   Int
   isDeleted        Boolean          @default(false)
   isActive         Boolean          @default(true)
-  rightAnswers     String[]         @default([])
   theme            String
   answers          Answer[]
   labels           QuestionLabel[]

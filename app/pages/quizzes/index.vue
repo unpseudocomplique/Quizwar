@@ -1,9 +1,6 @@
 <script setup lang="ts">
 
-const SeedDB = async () => {
-  await useFetch('/api/seed', { method: 'POST' })
-  alert('Seeded')
-}
+const { data: quizzes } = await useFetch('/api/quizzes')
 
 
 
@@ -16,13 +13,10 @@ const SeedDB = async () => {
 
       </UDashboardNavbar>
       <UDashboardPanelContent class="flex flex-col items-center justify-center gap-4">
-        <u-button @click="SeedDB" size="xl">
-          Seed db
-        </u-button>
-        <u-button to="/quizzes" size="xl">
-          Select a quiz
+        <nuxt-link v-for="quiz in quizzes" :to="`/quizzes/${quiz.id}`" class="hover:underline">
+          <h1 class="text-2xl">{{ quiz.display }}</h1>
+        </nuxt-link>
 
-        </u-button>
       </UDashboardPanelContent>
 
     </UDashboardPanel>
