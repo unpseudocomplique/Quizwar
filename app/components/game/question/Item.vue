@@ -70,8 +70,8 @@ const selectAnwser = (answer) => {
 <template>
     <u-card class="h-full" :ui="{ body: { base: 'h-full' }, padding: 'px-4 py-5 sm:p-6' }">
         <div class="gap-5 flex flex-col h-full" v-auto-animate>
-            <span ref="imageRef" class=" mx-auto opacity-0">
-                <nuxt-img class="w-full" :src="question.picture"></nuxt-img>
+            <span ref="imageRef" class=" mx-auto opacity-0 max-h-[50vh]">
+                <nuxt-img class="w-full h-full" :src="question.picture"></nuxt-img>
             </span>
             <p ref="questionRef" class="text-center text-5xl font-bold opacity-0">
                 {{ question.display }}
