@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-const { data: quizzes } = await useFetch('/api/quiz')
+const { data: quizzes } = await useFetch('/api/quizzes')
 
 const currentQuestion = ref(null)
 const currentQuestionIndex = ref(0)
@@ -102,7 +102,7 @@ const getAnswer = (question, answer) => {
 
   const answerIndex = !answer ? -1 : quiz.value.questions[questionIndex].answers.findIndex(item => item.id === answer.id)
 
-  if (answerIndex > -1) quiz.value[questionIndex].answers[answerIndex].selected = true
+  if (answerIndex > -1) quiz.value.questions[questionIndex].answers[answerIndex].selected = true
 
   if (questionIndex === quiz.value.questions.length - 1) {
     currentQuestion.value = null
@@ -142,6 +142,8 @@ const userScore = computed(() => {
         </u-button>
         <h1 class="text-2xl">Are you ready ?</h1>
         <UButton @click="isGameStarted = true" color="green" size="xl">Start</UButton>
+
+        <pre>{{ quizzes }}</pre>
       </UDashboardPanelContent>
       <UDashboardPanelContent v-else-if="!isGameOver">
         <p>Question : {{ currentQuestionIndex + 1 }} / {{ quiz.questions.length }}</p>
@@ -152,7 +154,8 @@ const userScore = computed(() => {
         <div class="flex flex-col items-center justify-center gap-4 h-full">
 
           <p class="text-2xl">Game Over</p>
-          <p class="text-4xl font-bold uppercase">You scored {{ userScore.rightAnswers }} / {{ quizz.length }}</p>
+          <p class="text-4xl font-bold uppercase">You scored {{ userScore.rightAnswers }} / {{ quiz.questions.length }}
+          </p>
         </div>
       </UDashboardPanelContent>
     </UDashboardPanel>
