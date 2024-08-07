@@ -50,6 +50,11 @@ export default defineNuxtConfig({
     }
   },
 
+  runtimeConfig: {
+    public: {
+      domain: 'localhost:3000'
+    }
+  },
   compatibilityDate: '2024-07-11',
   
 })

@@ -1,25 +1,36 @@
 <script setup lang="ts">
 
-// In prod: check if secure, then use wss://
-const { status, data, send, open, close } = useWebSocket(`ws://${location.host}/api/quiz/1/websocket`)
-const history = ref<string[]>([])
+const runtimeConfig = useRuntimeConfig()
 
-watch(data, (newValue) => {
-  history.value.push(`server : ${newValue}`)
-})
+// In prod: check if secure, then use wss://
+const { status, data, send, open, close } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
+// const websocket = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/1/websocket`)
+const history = ref<string[]>([])
+const message = ref('')
+
+// watch(() => websocket.value?.data, (newValue) => {
+//   history.value.push(`server : ${newValue}`)
+// })
 
 const SeedDB = async () => {
-  await useFetch('/api/seed', { method: 'POST' })
-  alert('Seeded')
+  try {
+    await useFetch('/api/seed', { method: 'POST' })
+    alert('Seeded')
+  } catch (e) {
+    alert('alert error')
+  }
+
 }
 
-const message = ref('');
-const sendData = () => {
-  history.value.push('client : ' + message.value)
-  send(message.value);
-  message.value = '';
+const room = ref('');
+const connectToRoom = async () => {
+  send(JSON.stringify({ type: 'join', room: room.value }))
 }
 
+const sendMessage = async () => {
+  send(JSON.stringify({ type: 'message', message: message.value, room: room.value }))
+  message.value = ''
+}
 </script>
 
 <template>
@@ -36,16 +47,31 @@ const sendData = () => {
           Select a quiz
         </u-button>
         <h1>websocket</h1>
-  <form @submit.prevent="sendData">
-    <input v-model="message"/>
-    <button type="submit">Send</button>
-  </form>
-  <div>
-    <p v-for="entry in history">{{ entry }}</p>
-  </div>
+
+        <pre>
+          {{ data }}
+        </pre>
+        <pre>
+          {{ status }}
+        </pre>
+
+        <form @submit.prevent="connectToRoom">
+          <input v-model="room" />
+          <button type="submit">Join room</button>
+        </form>
+
+        <form @submit.prevent="sendMessage">
+          <input v-model="message" />
+          <button type="submit">Send message</button>
+        </form>
+
+
+        <div>
+          <p v-for="entry in history">{{ entry }}</p>
+        </div>
       </UDashboardPanelContent>
     </UDashboardPanel>
-    
+
   </UDashboardPage>
-  
+
 </template>
