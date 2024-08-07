@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import { WebSocketMessage, actionTypeEnum } from '@/utils/websocket';
+
 const runtimeConfig = useRuntimeConfig()
 
 // In prod: check if secure, then use wss://
@@ -8,9 +10,10 @@ const { status, data, send, open, close } = useWebSocket(`ws://${runtimeConfig.p
 const history = ref<string[]>([])
 const message = ref('')
 
-// watch(() => websocket.value?.data, (newValue) => {
-//   history.value.push(`server : ${newValue}`)
-// })
+watch(() => data.value, (newValue) => {
+  console.log(newValue)
+  history.value.push(`server : ${newValue}`)
+})
 
 const SeedDB = async () => {
   try {
@@ -24,11 +27,11 @@ const SeedDB = async () => {
 
 const room = ref('');
 const connectToRoom = async () => {
-  send(JSON.stringify({ type: 'join', room: room.value }))
+  send(new WebSocketMessage(actionTypeEnum.JOIN, room.value, '').toString())
 }
 
 const sendMessage = async () => {
-  send(JSON.stringify({ type: 'message', message: message.value, room: room.value }))
+  send(new WebSocketMessage(actionTypeEnum.MESSAGE, room.value, message.value).toString())
   message.value = ''
 }
 </script>
