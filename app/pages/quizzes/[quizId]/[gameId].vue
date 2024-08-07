@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+const runtimeConfig = useRuntimeConfig()
 
 const quizId = useRoute().params.quizId as string
+const gameId = useRoute().params.gameId as string
 console.log(quizId)
-const { data: quiz } = await useFetch(`/api/quizzes/${quizId}`)
+const { data: game } = await useFetch(`/api/game/${gameId}`) // TODO: avant c'était /api/quizzes/${quizId} avec variable quiz, il faut maintenant trasnformer ça en PlayerAnswer / GameQuestion
+const { status, data, send, open, close } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
 
 
 const currentQuestion = ref(null)

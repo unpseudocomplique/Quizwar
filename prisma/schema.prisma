@@ -12,12 +12,14 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model Quiz {
-  id        String     @id @default(cuid())
-  display     String
-  isDeleted Boolean @default(false)
-  isActive Boolean @default(true)
+  id        String         @id @default(cuid())
+  display   String
+  isDeleted Boolean        @default(false)
+  isActive  Boolean        @default(true)
   questions QuizQuestion[]
+  Game      Game[]
 }
 
 model QuizQuestion {
@@ -25,40 +27,43 @@ model QuizQuestion {
   questionId String
   quiz       Quiz     @relation(fields: [quizId], references: [id])
   question   Question @relation(fields: [questionId], references: [id])
-  
+
   @@id([quizId, questionId])
 }
 
 model Question {
-  id               String           @id @default(cuid())
+  id               String          @id @default(cuid())
   display          String
   picture          String
   questionDuration Int
   answerDuration   Int
-  isDeleted        Boolean          @default(false)
-  isActive         Boolean          @default(true)
+  isDeleted        Boolean         @default(false)
+  isActive         Boolean         @default(true)
   theme            String
   answers          Answer[]
   labels           QuestionLabel[]
   quizzes          QuizQuestion[]
+  GameQuestion     GameQuestion[]
+  PlayerAnswer     PlayerAnswer[]
 }
 
 model Answer {
-  id        String   @id @default(cuid())
-  display   String
-  selected  Boolean
-  isDeleted Boolean @default(false)
-  isActive  Boolean @default(true)
-  question  Question @relation(fields: [questionId], references: [id])
-  questionId String
-  isCorrect Boolean
+  id           String         @id @default(cuid())
+  display      String
+  selected     Boolean
+  isDeleted    Boolean        @default(false)
+  isActive     Boolean        @default(true)
+  question     Question       @relation(fields: [questionId], references: [id])
+  questionId   String
+  isCorrect    Boolean
+  PlayerAnswer PlayerAnswer[]
 }
 
 model Label {
-  id    String   @id @default(cuid())
-  display  String
-  isDeleted Boolean @default(false)
-  isActive  Boolean @default(true)
+  id        String          @id @default(cuid())
+  display   String
+  isDeleted Boolean         @default(false)
+  isActive  Boolean         @default(true)
   questions QuestionLabel[]
 }
 
@@ -67,6 +72,56 @@ model QuestionLabel {
   labelId    String
   question   Question @relation(fields: [questionId], references: [id])
   label      Label    @relation(fields: [labelId], references: [id])
-  
+
   @@id([questionId, labelId])
+}
+
+model Game {
+  id           String         @id @default(cuid())
+  display         String
+  quizId        String
+  createdAt    DateTime       @default(now())
+  isActive     Boolean        @default(true)
+  quiz         Quiz           @relation(fields: [quizId], references: [id])
+  players      Player[]
+  questions    GameQuestion[]
+  PlayerAnswer PlayerAnswer[]
+}
+
+model Player {
+  id       String         @id @default(cuid())
+  username String
+  gameId   String
+  game     Game           @relation(fields: [gameId], references: [id])
+  answers  PlayerAnswer[]
+}
+
+model GameQuestion {
+  gameId     String
+  questionId String
+  game       Game           @relation(fields: [gameId], references: [id])
+  question   Question       @relation(fields: [questionId], references: [id])
+  answers    PlayerAnswer[]
+
+  @@id([gameId, questionId])
+}
+
+model PlayerAnswer {
+  id         String   @id @default(cuid())
+  playerId   String
+  questionId String
+  gameId     String
+  answerId   String
+  isCorrect  Boolean
+  answeredAt DateTime @default(now())
+
+  player                 Player        @relation(fields: [playerId], references: [id])
+  question               Question      @relation(fields: [questionId], references: [id])
+  game                   Game          @relation(fields: [gameId], references: [id])
+  answer                 Answer        @relation(fields: [answerId], references: [id])
+  GameQuestion           GameQuestion? @relation(fields: [gameQuestionGameId, gameQuestionQuestionId], references: [gameId, questionId])
+  gameQuestionGameId     String?
+  gameQuestionQuestionId String?
+
+  @@unique([playerId, questionId, gameId])
 }
