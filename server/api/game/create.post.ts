@@ -1,18 +1,29 @@
 export default defineEventHandler(async (event) => {
-    const { username, room, quizId } = await readBody(event);
+    const { room, quizId } = await readBody(event);
 
-    return await prisma.game.create({
+    const session = await requireUserSession(event)
+
+
+    const game = await prisma.game.create({
         data: {
             display: room,
             quizId: quizId,
             players: {
-                create: [
-                    {
-                        username,
-                    }
-                ]
+                create: {
+                    playerId: session.user.id,
+                }
             }
         },
+        include: {
+            players: {
+                include: {
+                    player: true
+                }
+            }
+        }
     });
+
+
+    return game
 
 });

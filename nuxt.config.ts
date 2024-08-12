@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@vueuse/nuxt',
     '@nuxt/image',
-    '@formkit/auto-animate/nuxt'
+    '@formkit/auto-animate/nuxt',
+    "nuxt-auth-utils"
   ],
   nitro: {
     experimental:{

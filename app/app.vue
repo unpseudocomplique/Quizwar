@@ -3,6 +3,7 @@ const colorMode = useColorMode()
 
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
 
+
 useHead({
   meta: [
     { charset: 'utf-8' },
@@ -34,7 +35,6 @@ useSeoMeta({
 <template>
   <div>
     <NuxtLoadingIndicator />
-
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

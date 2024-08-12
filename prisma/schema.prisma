@@ -43,7 +43,6 @@ model Question {
   answers          Answer[]
   labels           QuestionLabel[]
   quizzes          QuizQuestion[]
-  GameQuestion     GameQuestion[]
   PlayerAnswer     PlayerAnswer[]
 }
 
@@ -56,7 +55,6 @@ model Answer {
   question     Question       @relation(fields: [questionId], references: [id])
   questionId   String
   isCorrect    Boolean
-  PlayerAnswer PlayerAnswer[]
 }
 
 model Label {
@@ -78,32 +76,29 @@ model QuestionLabel {
 
 model Game {
   id           String         @id @default(cuid())
-  display         String
-  quizId        String
+  display      String
+  quizId       String
   createdAt    DateTime       @default(now())
   isActive     Boolean        @default(true)
   quiz         Quiz           @relation(fields: [quizId], references: [id])
-  players      Player[]
-  questions    GameQuestion[]
+  players      PlayerGame[]
   PlayerAnswer PlayerAnswer[]
 }
 
 model Player {
   id       String         @id @default(cuid())
   username String
-  gameId   String
-  game     Game           @relation(fields: [gameId], references: [id])
+  games    PlayerGame[]
   answers  PlayerAnswer[]
 }
 
-model GameQuestion {
-  gameId     String
-  questionId String
-  game       Game           @relation(fields: [gameId], references: [id])
-  question   Question       @relation(fields: [questionId], references: [id])
-  answers    PlayerAnswer[]
+model PlayerGame {
+  playerId String
+  gameId   String
+  player   Player @relation(fields: [playerId], references: [id])
+  game     Game   @relation(fields: [gameId], references: [id])
 
-  @@id([gameId, questionId])
+  @@id([playerId, gameId])
 }
 
 model PlayerAnswer {
@@ -111,17 +106,13 @@ model PlayerAnswer {
   playerId   String
   questionId String
   gameId     String
-  answerId   String
+  answerIds  String[]
   isCorrect  Boolean
   answeredAt DateTime @default(now())
 
-  player                 Player        @relation(fields: [playerId], references: [id])
-  question               Question      @relation(fields: [questionId], references: [id])
-  game                   Game          @relation(fields: [gameId], references: [id])
-  answer                 Answer        @relation(fields: [answerId], references: [id])
-  GameQuestion           GameQuestion? @relation(fields: [gameQuestionGameId, gameQuestionQuestionId], references: [gameId, questionId])
-  gameQuestionGameId     String?
-  gameQuestionQuestionId String?
+  player   Player   @relation(fields: [playerId], references: [id])
+  question Question @relation(fields: [questionId], references: [id])
+  game     Game     @relation(fields: [gameId], references: [id])
 
   @@unique([playerId, questionId, gameId])
 }

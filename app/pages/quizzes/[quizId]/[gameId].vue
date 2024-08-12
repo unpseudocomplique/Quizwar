@@ -2,30 +2,34 @@
 import { computed, ref } from 'vue'
 
 const runtimeConfig = useRuntimeConfig()
-
-const quizId = useRoute().params.quizId as string
-const gameId = useRoute().params.gameId as string
-console.log(quizId)
-const { data: game } = await useFetch(`/api/game/${gameId}`) // TODO: avant c'était /api/quizzes/${quizId} avec variable quiz, il faut maintenant trasnformer ça en PlayerAnswer / GameQuestion
 const { status, data, send, open, close } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
 
+const route = useRoute()
+const quizId = route.params.quizId
+
+const gameId = route.params.gameId as string
+
+const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
+
+const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
+game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
+console.log('game', game.value)
 
 const currentQuestion = ref(null)
 const currentQuestionIndex = ref(0)
 const isGameOver = ref(false)
 const isGameStarted = ref(false)
 
-currentQuestion.value = quiz.value.questions[currentQuestionIndex.value].question
-
+currentQuestion.value = game.value.quiz.questions[currentQuestionIndex.value].question
 const getAnswer = (question, answer) => {
-    const questionIndex = quiz.value.questions.findIndex(item => item.questionId === question.id)
+    const questionIndex = game.value.quiz.questions.findIndex(item => item.questionId === question.id)
     if (questionIndex === -1) return;
 
-    const answerIndex = !answer ? -1 : quiz.value.questions[questionIndex].question.answers.findIndex(item => item.id === answer.id)
+    const answerIndex = !answer ? -1 : game.value.quiz.questions[questionIndex].question.answers.findIndex(item => item.id === answer.id)
 
-    if (answerIndex > -1) quiz.value.questions[questionIndex].question.answers[answerIndex].selected = true
+    if (answerIndex > -1) game.value.quiz.questions[questionIndex].question.answers[answerIndex].selected = true
 
-    if (questionIndex === quiz.value.questions.length - 1) {
+    if (questionIndex === game.value.quiz.questions.length - 1) {
         currentQuestion.value = null
         isGameOver.value = true
         return;
@@ -33,11 +37,11 @@ const getAnswer = (question, answer) => {
 
     currentQuestionIndex.value = questionIndex + 1
 
-    currentQuestion.value = quiz.value.questions[currentQuestionIndex.value].question
+    currentQuestion.value = game.value.quiz.questions[currentQuestionIndex.value].question
 }
 
 const userScore = computed(() => {
-    const score = quiz.value.questions.reduce((acc, item) => {
+    const score = game.value.quiz.questions.reduce((acc, item) => {
 
         const isUserRight = item.question.answers.every(answer => answer.selected === answer.isCorrect)
 
@@ -64,7 +68,7 @@ const userScore = computed(() => {
 
             </UDashboardPanelContent>
             <UDashboardPanelContent v-else-if="!isGameOver">
-                <p>Question : {{ currentQuestionIndex + 1 }} / {{ quiz.questions.length }}</p>
+                <p>Question : {{ currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
                 <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
                     @answer="getAnswer(currentQuestion, $event)"></game-question-item>
             </UDashboardPanelContent>
@@ -75,7 +79,7 @@ const userScore = computed(() => {
                     <p class="text-4xl font-bold uppercase">
                         You scored {{ userScore.rightAnswers }}
                         /
-                        {{ quiz.questions.length }}
+                        {{ game.quiz.questions.length }}
                     </p>
                 </div>
             </UDashboardPanelContent>

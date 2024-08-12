@@ -40,7 +40,6 @@ const schemaJoinRoom = z.object({
 type TSchemaJoinRoom = z.infer<typeof schemaJoinRoom>
 
 const stateJoinRoom = ref({
-    username: '',
     room: '',
     joining: false
 })
@@ -53,14 +52,12 @@ async function onSubmitJoin(event: FormSubmitEvent<TSchemaJoinRoom>) {
 }
 
 const schemaCreateRoom = z.object({
-    username: z.string().min(1).max(20),
     room: z.string().min(1).max(20),
 })
 
 type TSchemaCreateRoom = z.infer<typeof schemaCreateRoom>
 
 const stateCreateRoom = ref({
-    username: '',
     room: '',
     creating: false
 })
@@ -107,50 +104,32 @@ async function onSubmitCreateRoom(event: FormSubmitEvent<TSchemaCreateRoom>) {
                         <UButton type="submit" color="green" size="xl">Create</UButton>
                     </form> -->
 
-                    <u-card v-if="showJoinRoom" class="w-[600px] max-w-full">
-                        <template #header>
-                            <div class="flex justify-between gap-5">
-                                <h2 class="text-xl">Join a room</h2>
-                                <u-button variant="ghost" @click="showJoinRoom = false">Create a new game</u-button>
-                            </div>
-                        </template>
-                        <UForm :schema="schemaJoinRoom" :state="stateJoinRoom" class="space-y-4" @submit="onSubmitJoin">
-                            <UFormGroup label="Votre username" name="username">
-                                <UInput v-model="stateJoinRoom.username" required />
-                            </UFormGroup>
+                    <h2 class="text-4xl">Join an existing game</h2>
 
-                            <UFormGroup label="Code du jeux" name="room">
-                                <UInput v-model="stateJoinRoom.room" required />
-                            </UFormGroup>
+                    <u-form :schema="schemaJoinRoom" :state="stateJoinRoom" class="space-y-4" @submit="onSubmitJoin">
+                        <u-form-group label="Code du jeux" name="room">
+                            <u-input v-model="stateJoinRoom.room" required />
+                        </u-form-group>
 
-                            <UButton type="submit" class="ml-auto" :loading="stateJoinRoom.joining">
-                                Join game
-                            </UButton>
-                        </UForm>
-                    </u-card>
+                        <u-button type="submit" class="ml-auto" :loading="stateJoinRoom.joining" disabled>
+                            Join game
+                        </u-button>
+                    </u-form>
 
-                    <u-card v-else class="w-[600px] max-w-full">
-                        <template #header>
-                            <div class="flex justify-between gap-5">
-                                <h2 class="text-xl">Create a room</h2>
-                                <u-button variant="ghost" @click="showJoinRoom = true">Join a game</u-button>
-                            </div>
-                        </template>
-                        <UForm :schema="schemaCreateRoom" :state="stateCreateRoom" class="space-y-4"
-                            @submit="onSubmitCreateRoom">
-                            <UFormGroup label="Votre username" name="username">
-                                <UInput v-model="stateCreateRoom.username" required />
-                            </UFormGroup>
-                            <UFormGroup label="Code du jeux" name="room">
-                                <UInput v-model="stateCreateRoom.room" required />
-                            </UFormGroup>
+                    <h2 class="text-4xl">Create a new game</h2>
+
+                    <u-form :schema="schemaCreateRoom" :state="stateCreateRoom" class="space-y-4"
+                        @submit="onSubmitCreateRoom">
+                        <u-form-group label="Code du jeux" name="room">
+                            <u-input v-model="stateCreateRoom.room" required />
+                        </u-form-group>
 
 
-                            <UButton type="submit" class="ml-auto" :loading="stateCreateRoom.creating">
-                                Create game
-                            </UButton>
-                        </UForm>
-                    </u-card>
+                        <u-button type="submit" class="ml-auto" :loading="stateCreateRoom.creating">
+                            Create game
+                        </u-button>
+                    </u-form>
+
                 </div>
             </UDashboardPanelContent>
         </UDashboardPanel>

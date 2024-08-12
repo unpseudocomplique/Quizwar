@@ -1,5 +1,14 @@
 <script setup lang="ts">
 
+
+const { loggedIn, user, session, fetch, clear } = useUserSession()
+await fetch()
+
+// if (!loggedIn.value) {
+//   const router = useRouter()
+//   await router.push('/auth/login')
+// }
+
 const { data: quizzes } = await useFetch('/api/quizzes')
 
 

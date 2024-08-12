@@ -4,14 +4,13 @@ export default defineEventHandler(async (event) => {
         where: { id: gameId },
         include: {
             players: true,
-            questions: true,
             quiz: {
                 include: {
                     questions: {
                         include: {
                             question: {
                                 include: {
-                                    GameQuestion: true,
+                                    answers: true,
                                     labels: {
                                         include: {
                                             label: true
