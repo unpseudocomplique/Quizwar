@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Harry Potter',
                                 answers: {
                                     create: [
-                                        { display: 'Harry James Potter', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Harry James Potter', selected: false, isCorrect: true },
                                         { display: 'Harry John Potter', selected: false, isCorrect: false },
                                         { display: 'Harry Edward Potter', selected: false, isCorrect: false },
                                         { display: 'Harry Albus Potter', selected: false, isCorrect: false }
@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Maisons',
                                 answers: {
                                     create: [
-                                        { display: 'Gryffindor', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Gryffindor', selected: false, isCorrect: true },
                                         { display: 'Slytherin', selected: false, isCorrect: false },
                                         { display: 'Ravenclaw', selected: false, isCorrect: false },
                                         { display: 'Hufflepuff', selected: false, isCorrect: false }
@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Personnages',
                                 answers: {
                                     create: [
-                                        { display: 'Albus Dumbledore', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Albus Dumbledore', selected: false, isCorrect: true },
                                         { display: 'Severus Snape', selected: false, isCorrect: false },
                                         { display: 'Minerva McGonagall', selected: false, isCorrect: false },
                                         { display: 'Gellert Grindelwald', selected: false, isCorrect: false }
@@ -117,7 +117,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Famille',
                                 answers: {
                                     create: [
-                                        { display: 'Regulus Black', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Regulus Black', selected: false, isCorrect: true },
                                         { display: 'Remus Lupin', selected: false, isCorrect: false },
                                         { display: 'James Potter', selected: false, isCorrect: false },
                                         { display: 'Peter Pettigrew', selected: false, isCorrect: false }
@@ -147,7 +147,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Quidditch',
                                 answers: {
                                     create: [
-                                        { display: 'Attrapeur', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Attrapeur', selected: false, isCorrect: true },
                                         { display: 'Poursuiveur', selected: false, isCorrect: false },
                                         { display: 'Gardien', selected: false, isCorrect: false },
                                         { display: 'Batteur', selected: false, isCorrect: false }
@@ -177,7 +177,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Objets magiques',
                                 answers: {
                                     create: [
-                                        { display: 'La Pierre Philosophale', selected: false, isCorrect: true, selected: false },
+                                        { display: 'La Pierre Philosophale', selected: false, isCorrect: true },
                                         { display: 'La Pierre de Lune', selected: false, isCorrect: false },
                                         { display: 'La Pierre de Vie', selected: false, isCorrect: false },
                                         { display: 'La Pierre du Destin', selected: false, isCorrect: false }
@@ -207,7 +207,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Sorts',
                                 answers: {
                                     create: [
-                                        { display: 'Expecto Patronum', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Expecto Patronum', selected: false, isCorrect: true },
                                         { display: 'Expelliarmus', selected: false, isCorrect: false },
                                         { display: 'Avada Kedavra', selected: false, isCorrect: false },
                                         { display: 'Lumos', selected: false, isCorrect: false }
@@ -237,7 +237,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Famille',
                                 answers: {
                                     create: [
-                                        { display: 'Arthur', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Arthur', selected: false, isCorrect: true },
                                         { display: 'Percy', selected: false, isCorrect: false },
                                         { display: 'Fred', selected: false, isCorrect: false },
                                         { display: 'George', selected: false, isCorrect: false }
@@ -267,7 +267,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Créatures magiques',
                                 answers: {
                                     create: [
-                                        { display: 'Gobelin', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Gobelin', selected: false, isCorrect: true },
                                         { display: 'Elfe de maison', selected: false, isCorrect: false },
                                         { display: 'Dragon', selected: false, isCorrect: false },
                                         { display: 'Griffon', selected: false, isCorrect: false }
@@ -297,7 +297,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Langues',
                                 answers: {
                                     create: [
-                                        { display: 'Fourchelang', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Fourchelang', selected: false, isCorrect: true },
                                         { display: 'Gibberish', selected: false, isCorrect: false },
                                         { display: 'Runes', selected: false, isCorrect: false },
                                         { display: 'Elfe', selected: false, isCorrect: false }
@@ -329,7 +329,7 @@ export default defineEventHandler(async (event) => {
                                     create: [
                                         { display: 'Potion d\'invisibilité', selected: false, isCorrect: false },
                                         { display: 'Potion de Polyjuice', selected: false, isCorrect: false },
-                                        { display: 'Cape d\'invisibilité', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Cape d\'invisibilité', selected: false, isCorrect: true },
                                         { display: 'Potion de Force', selected: false, isCorrect: false }
                                     ]
                                 },
@@ -357,7 +357,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Fondateurs',
                                 answers: {
                                     create: [
-                                        { display: 'Helga Poufsouffle', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Helga Poufsouffle', selected: false, isCorrect: true },
                                         { display: 'Rowena Serdaigle', selected: false, isCorrect: false },
                                         { display: 'Minerva McGonagall', selected: false, isCorrect: false },
                                         { display: 'Sybill Trelawney', selected: false, isCorrect: false }
@@ -387,7 +387,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Elfes de maison',
                                 answers: {
                                     create: [
-                                        { display: 'Kreacher', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Kreacher', selected: false, isCorrect: true },
                                         { display: 'Dobby', selected: false, isCorrect: false },
                                         { display: 'Winky', selected: false, isCorrect: false },
                                         { display: 'Nobby', selected: false, isCorrect: false }
@@ -417,7 +417,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Magasins',
                                 answers: {
                                     create: [
-                                        { display: 'Ollivanders', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Ollivanders', selected: false, isCorrect: true },
                                         { display: 'Flourish and Blotts', selected: false, isCorrect: false },
                                         { display: 'Weasleys\' Wizard Wheezes', selected: false, isCorrect: false },
                                         { display: 'The Leaky Cauldron', selected: false, isCorrect: false }
@@ -447,7 +447,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Créatures magiques',
                                 answers: {
                                     create: [
-                                        { display: 'Basilic', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Basilic', selected: false, isCorrect: true },
                                         { display: 'Hydre', selected: false, isCorrect: false },
                                         { display: 'Chimère', selected: false, isCorrect: false },
                                         { display: 'Manticore', selected: false, isCorrect: false }
@@ -477,7 +477,7 @@ export default defineEventHandler(async (event) => {
                                 theme: 'Directeurs',
                                 answers: {
                                     create: [
-                                        { display: 'Armando Dippet', selected: false, isCorrect: true, selected: false },
+                                        { display: 'Armando Dippet', selected: false, isCorrect: true },
                                         { display: 'Phineas Nigellus Black', selected: false, isCorrect: false },
                                         { display: 'Gellert Grindelwald', selected: false, isCorrect: false },
                                         { display: 'Horace Slughorn', selected: false, isCorrect: false }
