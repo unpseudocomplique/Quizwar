@@ -38,7 +38,6 @@ watch(() => data.value, (newValue) => {
 const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
 
 const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
-game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
 
 const currentQuestion = ref(null)
 const currentQuestionIndex = ref(0)
