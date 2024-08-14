@@ -6,7 +6,9 @@ const runtimeConfig = useRuntimeConfig()
 const { status, data, send, open, close, } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
-const players = ref([])
+const players = ref([
+
+])
 
 
 const route = useRoute()
@@ -21,6 +23,14 @@ watch(() => data.value, (newValue) => {
     console.log(parsed)
     if (parsed.type === 'startgame') {
         isGameStarted.value = true
+    }
+
+    if (parsed.type === "answer") {
+
+    }
+
+    if (parsed.type === "join") {
+
     }
 }, { deep: true })
 
@@ -100,7 +110,7 @@ const userScore = computed(() => {
                     @answer="getAnswer(currentQuestion, $event)"></game-question-item>
             </UDashboardPanelContent>
             <UDashboardPanelContent v-else>
-                <div class="flex flex-col items-center justify-center gap-4 h-full">
+                <!-- <div class="flex flex-col items-center justify-center gap-4 h-full">
 
                     <p class="text-2xl">Game Over</p>
                     <p class="text-4xl font-bold uppercase">
@@ -108,7 +118,9 @@ const userScore = computed(() => {
                         /
                         {{ game.quiz.questions.length }}
                     </p>
-                </div>
+                </div> -->
+
+                <game-score :game-id="gameId" />
             </UDashboardPanelContent>
         </UDashboardPanel>
     </UDashboardPage>
