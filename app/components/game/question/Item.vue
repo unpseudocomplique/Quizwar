@@ -6,6 +6,7 @@ import ThemeSound from '~/assets/sounds/music-theme.mp3'
 const question = defineModel()
 const emits = defineEmits(['answer'])
 
+
 const imageRef = ref()
 const questionRef = ref()
 const showAnswers = ref(false)
@@ -15,36 +16,36 @@ const showResult = ref(false)
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 
-onMounted(() => {
+onMounted(async () => {
 
-    const sequence = [
-        [imageRef.value, { opacity: [0, 1] }, { duration: 0.3 }],
-        [questionRef.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
-    ]
-    const audio = new Audio(ThemeSound)
-    audio.loop = true
+    // const sequence = [
+    //     [imageRef.value, { opacity: [0, 1] }, { duration: 0.3 }],
+    //     [questionRef.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
+    // ]
+    // const audio = new Audio(ThemeSound)
+    // audio.loop = true
 
-    audio.play()
-    const controles = timeline(sequence, {})
+    // audio.play()
+    // const controles = timeline(sequence, {})
 
 
 
-    controles.finished.then(async () => {
-        await sleep(question.value.questionDuration * 1000)
-        showAnswers.value = true
-        const duration = question.value.answerDuration * 1000
-        output.value = duration
-        await executeTransition(output, 100, 0, {
-            duration,
-            transition: TransitionPresets.linear,
-        })
-        showResult.value = true
-
-        emits('answer', question.value.answers.find(item => item.selected))
-
-        audio.pause()
-
+    // controles.finished.then(async () => {
+    await sleep(question.value.questionDuration * 1000)
+    showAnswers.value = true
+    const duration = question.value.answerDuration * 1000
+    output.value = duration
+    await executeTransition(output, 100, 0, {
+        duration,
+        transition: TransitionPresets.linear,
     })
+    showResult.value = true
+
+    emits('answer', question.value.answers.filter(item => item.selected))
+
+    // audio.pause()
+
+    // })
 })
 
 const isOneSelected = computed(() => {

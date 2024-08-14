@@ -1,7 +1,9 @@
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const params = event.context.params;
-    const { playerId } = body;
+
+    const session = await requireUserSession(event)
+
+    const { id: playerId } = session.user
     const { questionId, gameId, answerIds } = body;
 
     if (!playerId || !questionId || !gameId || !answerIds || !Array.isArray(answerIds)) {

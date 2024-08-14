@@ -18,12 +18,15 @@ export default defineWebSocketHandler({
 })
 
 const events = {
-    join: (peer, data: { room: string }) => {
+    join: (peer, data: { type: 'join', room: string }) => {
         peer.subscribe(data.room);
-        peer.publish(data.room, "Another user joined");
+        peer.publish(data.room, { type: 'join', room: data.room });
     },
-    message: (peer, data: { room: string, message: string }) => {
-        peer.publish(data.room, data.message)
+    answer: (peer, data: { type: 'answer', room: string, player: { id: string, username: string } }) => {
+        peer.publish(data.room, data)
+    },
+    startgame: (peer, data: { room: string, type: 'startgame' }) => {
+        peer.publish(data.room, data)
     },
     close: (peer, data: { room: string }) => {
         peer.publish(data.room, "Another user left");
