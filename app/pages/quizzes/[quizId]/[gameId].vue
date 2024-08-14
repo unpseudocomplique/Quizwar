@@ -39,6 +39,8 @@ const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
 
 const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
 
+game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
+
 const currentQuestion = ref(null)
 const currentQuestionIndex = ref(0)
 const isGameOver = ref(false)
@@ -58,7 +60,7 @@ const getAnswer = async (question, answers) => {
         body: { questionId: question.id, gameId: gameId, answerIds: answers.map(answer => answer.id) }
     })
 
-    send(JSON.stringify({ type: 'answer', room: gameId, player: user.value, answer: answer.playerAnswer }))
+    send(JSON.stringify({ type: 'answer', room: gameId, player: user.value, answer: answer }))
 
     console.log('answer', answer)
 
@@ -98,7 +100,7 @@ const userScore = computed(() => {
             <UDashboardNavbar title="Home">
 
             </UDashboardNavbar>
-            <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
+            <!-- <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
                 <h1 class="text-2xl">Are you ready ?</h1>
                 <UButton @click="startGame" color="green" size="xl">Start</UButton>
 
@@ -107,8 +109,8 @@ const userScore = computed(() => {
                 <p>Question : {{ currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
                 <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
                     @answer="getAnswer(currentQuestion, $event)"></game-question-item>
-            </UDashboardPanelContent>
-            <UDashboardPanelContent v-else>
+            </UDashboardPanelContent> -->
+            <UDashboardPanelContent v-if="true">
                 <!-- <div class="flex flex-col items-center justify-center gap-4 h-full">
 
                     <p class="text-2xl">Game Over</p>

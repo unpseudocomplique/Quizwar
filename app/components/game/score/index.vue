@@ -17,7 +17,7 @@ const { data: gameScore } = await useFetch(`/api/game/${props.gameId}/score`)
             <p class="text-4xl font-bold uppercase">
                 {{ score.player.username }}
             </p>
-
+            <game-score-question v-for="answer in score.answers" :key="answer.id" :answer="answer" />
         </u-card>
     </div>
 </template>

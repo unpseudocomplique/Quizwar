@@ -7,7 +7,12 @@ export default defineEventHandler(async (event) => {
     const playerAnswers = await prisma.playerAnswer.findMany({
         where: { gameId },
         include: {
-            player: true
+            player: true,
+            question: {
+                include: {
+                    answers: true
+                }
+            }
         }
     })
 
@@ -19,15 +24,17 @@ export default defineEventHandler(async (event) => {
             acc[playerId] = {
                 player,
                 score: 0,
+                answers: []
             }
         }
+        acc[playerId].answers.push(answer)
 
         if (isCorrect) {
             acc[playerId].score += 1
         }
 
         return acc
-    }, {} as Record<string, { player: typeof playerAnswers[0]['player'], score: number }>)
+    }, {} as Record<string, { player: typeof playerAnswers[0]['player'], score: number, answers: typeof playerAnswers }>)
 
     // Transformer l'objet en tableau
     const scoreArray = Object.values(scores)
