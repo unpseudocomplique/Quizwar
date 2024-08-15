@@ -76,8 +76,8 @@ const getAnswer = async (question, answers) => {
     send(JSON.stringify({ type: 'answer', room: gameId, player: user.value, answer: answer }))
 
     if (questionIndex === game.value.quiz.questions.length - 1) {
-        currentQuestion.value = null
-        isGameOver.value = true
+        const router = useRouter()
+        router.push(`/quizzes/${quizId}/${gameId}/score`)
         return;
     }
 
@@ -110,9 +110,6 @@ const startGame = async () => {
                 <p>Question : {{ currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
                 <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
                     @answer="getAnswer(currentQuestion, $event)"></game-question-item>
-            </UDashboardPanelContent>
-            <UDashboardPanelContent v-else>
-                <game-score :game-id="gameId" />
             </UDashboardPanelContent>
         </UDashboardPanel>
     </UDashboardPage>
