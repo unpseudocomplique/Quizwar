@@ -18,19 +18,19 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 onMounted(async () => {
 
-    // const sequence = [
-    //     [imageRef.value, { opacity: [0, 1] }, { duration: 0.3 }],
-    //     [questionRef.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
-    // ]
+    const sequence = [
+        [imageRef.value, { opacity: [0, 1] }, { duration: 0.3 }],
+        [questionRef.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
+    ]
     // const audio = new Audio(ThemeSound)
     // audio.loop = true
 
     // audio.play()
-    // const controles = timeline(sequence, {})
+    const controles = timeline(sequence, {})
 
+    console.log('new question : ', question.value)
 
-
-    // controles.finished.then(async () => {
+    controles.finished.then(async () => {
     await sleep(question.value.questionDuration * 1000)
     showAnswers.value = true
     const duration = question.value.answerDuration * 1000
@@ -45,7 +45,7 @@ onMounted(async () => {
 
     // audio.pause()
 
-    // })
+    })
 })
 
 const isOneSelected = computed(() => {
