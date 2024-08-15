@@ -2,6 +2,12 @@ export default defineEventHandler(async (event) => {
 
     const gameId = event.context.params?.gameId as string
 
+    const gameRequest = prisma.game.findUnique({
+        where: { id: gameId },
+        select: {
+            isActive: true
+        }
+    })
 
     // Récupérer les réponses des joueurs pour la partie donnée
     const playerAnswers = await prisma.playerAnswer.findMany({
@@ -39,6 +45,8 @@ export default defineEventHandler(async (event) => {
     // Transformer l'objet en tableau
     const scoreArray = Object.values(scores)
 
+    const game = await gameRequest
+
     // Retourner le tableau des scores
-    return { scores: scoreArray }
+    return { scores: scoreArray, isActive: game.isActive }
 })

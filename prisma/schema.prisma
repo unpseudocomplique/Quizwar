@@ -95,6 +95,7 @@ model Player {
 model PlayerGame {
   playerId String
   gameId   String
+  isFinished Boolean @default(false)
   player   Player @relation(fields: [playerId], references: [id])
   game     Game   @relation(fields: [gameId], references: [id])
 

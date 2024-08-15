@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useTimeoutFn } from '@vueuse/core'
+import { useClipboard } from '@vueuse/core'
+
 
 const runtimeConfig = useRuntimeConfig()
 const { status, data, send, open, close, } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
 const { loggedIn, user, session, fetch, clear } = useUserSession()
+
 
 const players = ref([
 
@@ -39,8 +41,19 @@ const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
 
 const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
 
-game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
+const { text, copy, copied, isSupported } = useClipboard({ source: game.value.display })
 
+
+onMounted(() => {
+    const isDev = window.location.href.includes('localhost')
+    if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
+})
+
+watch(text, () => {
+
+    const toast = useToast()
+    toast.add({ title: 'Copied game code', icon: 'i-heroicons-clipboard-check', color: 'green' })
+})
 const currentQuestion = ref(null)
 const currentQuestionIndex = ref(0)
 const isGameOver = ref(false)
@@ -62,8 +75,6 @@ const getAnswer = async (question, answers) => {
 
     send(JSON.stringify({ type: 'answer', room: gameId, player: user.value, answer: answer }))
 
-    console.log('answer', answer)
-
     if (questionIndex === game.value.quiz.questions.length - 1) {
         currentQuestion.value = null
         isGameOver.value = true
@@ -80,27 +91,17 @@ const startGame = async () => {
     isGameStarted.value = true
 }
 
-const userScore = computed(() => {
-    const score = game.value.quiz.questions.reduce((acc, item) => {
-
-        const isUserRight = item.question.answers.every(answer => answer.selected === answer.isCorrect)
-
-        if (isUserRight) acc.rightAnswers++
-        else acc.wrongAnswers++
-        return acc
-    }, { rightAnswers: 0, wrongAnswers: 0 })
-    return score
-})
-
 </script>
 
 <template>
     <UDashboardPage>
         <UDashboardPanel grow>
             <UDashboardNavbar title="Home">
-
             </UDashboardNavbar>
-            <!-- <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
+            <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
+                <p class="cursor-pointer text-xl" @click="copy(game.display)">Game code : {{ game.display }} <icon
+                        name="i-ph-clipboard-text-thin"></icon>
+                </p>
                 <h1 class="text-2xl">Are you ready ?</h1>
                 <UButton @click="startGame" color="green" size="xl">Start</UButton>
 
@@ -109,18 +110,8 @@ const userScore = computed(() => {
                 <p>Question : {{ currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
                 <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
                     @answer="getAnswer(currentQuestion, $event)"></game-question-item>
-            </UDashboardPanelContent> -->
-            <UDashboardPanelContent v-if="true">
-                <!-- <div class="flex flex-col items-center justify-center gap-4 h-full">
-
-                    <p class="text-2xl">Game Over</p>
-                    <p class="text-4xl font-bold uppercase">
-                        You scored {{ userScore.rightAnswers }}
-                        /
-                        {{ game.quiz.questions.length }}
-                    </p>
-                </div> -->
-
+            </UDashboardPanelContent>
+            <UDashboardPanelContent v-else>
                 <game-score :game-id="gameId" />
             </UDashboardPanelContent>
         </UDashboardPanel>
