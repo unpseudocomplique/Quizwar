@@ -2,7 +2,13 @@
 const colorMode = useColorMode()
 
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
-
+const { loggedIn, user, session, fetch, clear } = useUserSession()
+const route = useRoute()
+if (route.path !== '/auth/login' && !user.value) {
+  await fetch()
+  const router = useRouter()
+  await router.push(`/auth/login?redirect=${route.path}`)
+}
 
 useHead({
   meta: [

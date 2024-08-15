@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 
+const { loggedIn, user, session, fetch, clear } = useUserSession()
 const schemaCreatePlayer = z.object({
     username: z.string().min(1).max(20),
 })
@@ -28,7 +29,9 @@ const createPLayer = async (event: FormSubmitEvent<TSchemaCreatePlayer>) => {
     const url = route.query.redirect as string | undefined
 
     if (url) {
-        router.replace(url)
+        await fetch()
+        await router.replace(url)
+
     } else {
 
         await router.push(`/quizzes`)

@@ -18,6 +18,13 @@ const links = [
   }
 ]
 
+const logout = async () => {
+  const router = useRouter()
+  const route = useRoute()
+  await clear()
+  await router.push(`/auth/login?redirect=${route.path}`)
+}
+
 // const footerLinks = [{
 //   label: 'Invite people',
 //   icon: 'i-heroicons-plus',
@@ -74,7 +81,7 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
         <UDivider class="sticky bottom-0" />
 
         <template #footer>
-          <u-button @click="clear" variant="ghost">Logout</u-button>
+          <u-button @click="logout" variant="ghost">Logout</u-button>
         </template>
       </UDashboardSidebar>
     </UDashboardPanel>

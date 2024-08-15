@@ -4,12 +4,12 @@ import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 
 const { loggedIn, user, session, fetch, clear } = useUserSession()
-await fetch()
-if (!user.value) {
-  const router = useRouter()
-  const route = useRoute()
-  await router.push(`/auth/login?redirect=${route.path}`)
-}
+// await fetch()
+// if (!user.value) {
+//   const router = useRouter()
+//   const route = useRoute()
+//   await router.push(`/auth/login?redirect=${route.path}`)
+// }
 
 // if (!loggedIn.value) {
 //   const router = useRouter()
