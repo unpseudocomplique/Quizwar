@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
+import { useShare } from '@vueuse/core'
 
+const { share } = useShare()
 
 const runtimeConfig = useRuntimeConfig()
 const { status, data, send, open, close, } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
@@ -91,6 +93,18 @@ const startGame = async () => {
     isGameStarted.value = true
 }
 
+const linkUrl = computed(() => {
+    return window.location.host
+})
+
+const shareGame = async () => {
+    share({
+        url: window.location.href,
+        title: 'La guerre est déclarée',
+        text: `Je te défie sur ${game.value.display}`,
+    })
+}
+
 </script>
 
 <template>
@@ -102,7 +116,14 @@ const startGame = async () => {
                 <p class="cursor-pointer text-xl" @click="copy(game.display)">Game code : {{ game.display }} <icon
                         name="i-ph-clipboard-text-thin"></icon>
                 </p>
-                <h1 class="text-2xl">Are you ready ?</h1>
+                <p class="text-gray-400">or share this game</p>
+                <ClientOnly>
+                    <UButton @click="shareGame" color="green" size="xl">Share
+                        <Icon name="i-ph-share-network-duotone" />
+                    </UButton>
+                </ClientOnly>
+
+                <h1 class="text-2xl mt-10">Are you ready ?</h1>
                 <UButton @click="startGame" color="green" size="xl">Start</UButton>
 
             </UDashboardPanelContent>
