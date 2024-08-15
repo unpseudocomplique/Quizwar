@@ -23,7 +23,17 @@ const createPLayer = async (event: FormSubmitEvent<TSchemaCreatePlayer>) => {
     })
 
     const router = useRouter()
-    await router.push(`/quizzes`)
+    const route = useRoute()
+
+    const url = route.query.redirect as string | undefined
+
+    if (url) {
+        router.replace(url)
+    } else {
+
+        await router.push(`/quizzes`)
+    }
+
 
 }
 

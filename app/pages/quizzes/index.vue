@@ -7,7 +7,8 @@ const { loggedIn, user, session, fetch, clear } = useUserSession()
 await fetch()
 if (!user.value) {
   const router = useRouter()
-  await router.push('/auth/login')
+  const route = useRoute()
+  await router.push(`/auth/login?redirect=${route.path}`)
 }
 
 // if (!loggedIn.value) {

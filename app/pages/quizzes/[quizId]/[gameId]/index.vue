@@ -8,7 +8,12 @@ const { share } = useShare()
 const runtimeConfig = useRuntimeConfig()
 const { status, data, send, open, close, } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
 const { loggedIn, user, session, fetch, clear } = useUserSession()
-
+await fetch()
+if (!user.value) {
+    const router = useRouter()
+    const route = useRoute()
+    await router.push(`/auth/login?redirect=${route.path}`)
+}
 
 const players = ref([
 
