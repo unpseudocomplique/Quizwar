@@ -130,7 +130,7 @@ export default defineEventHandler(async (event) => {
         const completion = await openai.beta.chat.completions.parse({
             model: "gpt-4o-2024-08-06",
             messages: [
-                { role: "system", content: "You are a quiz generator. Create a quiz with questions, answers, and labels. The property promptPicture is used to generate the question image. L'image devrait être lié à une question mais ne pas représenter directement la réponse mais plutôt illustrer la question" },
+                { role: "system", content: "You are a quiz generator. Create a quiz with questions, answers, and labels. The property promptPicture is used to generate the question image. L'image devrait être lié à une question mais ne pas représenter directement la réponse mais plutôt illustrer la question. QuestionSchema.theme est le thème de la question et devrait donner un indice sur le theme lié a la question." },
                 { role: "user", content: `Génère un quiz sur le sujet ${topic}. En français avec 10 questions et 4 réponses possible. Les réponses doivent être coérentes et pas trop proches pour être incorrectes avec seul une réponse correcte.` },
             ],
             response_format: zodResponseFormat(QuizSchema, "quiz"),
