@@ -5,6 +5,7 @@ const { data: gameScore } = useFetch(`/api/game/fakeId/score`, { immediate: fals
 
 const props = defineProps<{
     answer: typeof gameScore.value['scores'][0]['answers'][0]
+    display: string
 }>()
 
 const correctAnswer = computed(() => {
@@ -19,6 +20,7 @@ const responded = computed(() => {
 
 <template>
     <u-card>
+        <p>Question : {{ display }}</p>
         <div class="flex gap-4">
             <p>Correction: </p>
             <p v-for="toAnswer in correctAnswer">{{ toAnswer.display }}</p>

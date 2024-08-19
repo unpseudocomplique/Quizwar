@@ -24,13 +24,14 @@ export default defineEventHandler(async (event) => {
 
     // Calculer les scores pour chaque joueur
     const scores = playerAnswers.reduce((acc, answer) => {
-        const { playerId, isCorrect, player } = answer
+        const { playerId, isCorrect, player, question } = answer
 
         if (!acc[playerId]) {
             acc[playerId] = {
                 player,
                 score: 0,
-                answers: []
+                answers: [],
+                display: question.display
             }
         }
         acc[playerId].answers.push(answer)
@@ -40,7 +41,7 @@ export default defineEventHandler(async (event) => {
         }
 
         return acc
-    }, {} as Record<string, { player: typeof playerAnswers[0]['player'], score: number, answers: typeof playerAnswers }>)
+    }, {} as Record<string, { player: typeof playerAnswers[0]['player'], score: number, answers: typeof playerAnswers, display: string }>)
 
     // Transformer l'objet en tableau
     const scoreArray = Object.values(scores)

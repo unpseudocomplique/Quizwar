@@ -39,7 +39,8 @@ const { isPending, start, stop } = useTimeoutFn(async () => {
             </template>
             <template #item="{ item }">
                 <div class="p-1 flex flex-col gap-1">
-                    <game-score-question v-for="answer in item.answers" :key="answer.id" :answer="answer" />
+                    <game-score-question :display="item.display" v-for="answer in item.answers" :key="answer.id"
+                        :answer="answer" />
                 </div>
             </template>
         </UAccordion>
