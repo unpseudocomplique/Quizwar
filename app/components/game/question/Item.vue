@@ -96,16 +96,16 @@ const selectAnwser = (answer) => {
         <div v-if="!showQuestion" ref="containerTheme"
             class="flex flex-col h-full items-center justify-center opacity-0">
             <p ref="labelTheme" class="opacity-0">Theme</p>
-            <p ref="valueTheme" class="text-center text-5xl font-bold opacity-0">
+            <p ref="valueTheme" class="text-center text-xl md:text-5xl font-bold opacity-0">
                 {{ question.theme }}
             </p>
         </div>
         <template v-else>
 
-            <span ref="imageRef" class=" mx-auto opacity-0 max-h-[50vh]">
+            <span ref="imageRef" class=" mx-auto opacity-0 max-h-[40vh]">
                 <nuxt-img class="w-full h-full" :src="question.picture"></nuxt-img>
             </span>
-            <p ref="questionRef" class="text-center text-5xl font-bold opacity-0">
+            <p ref="questionRef" class="text-center text-xl md:text-5xl font-bold opacity-0">
                 {{ question.display }}
             </p>
             <UProgress v-if="showAnswers" :value="output" />
