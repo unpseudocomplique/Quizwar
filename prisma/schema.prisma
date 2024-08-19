@@ -35,8 +35,9 @@ model Question {
   id               String          @id @default(cuid())
   display          String
   picture          String
-  questionDuration Int
-  answerDuration   Int
+  promptPicture    String          @default("")
+  questionDuration Int             @default(2)
+  answerDuration   Int             @default(5)
   isDeleted        Boolean         @default(false)
   isActive         Boolean         @default(true)
   theme            String
@@ -47,14 +48,14 @@ model Question {
 }
 
 model Answer {
-  id           String         @id @default(cuid())
-  display      String
-  selected     Boolean
-  isDeleted    Boolean        @default(false)
-  isActive     Boolean        @default(true)
-  question     Question       @relation(fields: [questionId], references: [id])
-  questionId   String
-  isCorrect    Boolean
+  id         String   @id @default(cuid())
+  display    String
+  selected   Boolean
+  isDeleted  Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+  isCorrect  Boolean
 }
 
 model Label {
@@ -93,11 +94,11 @@ model Player {
 }
 
 model PlayerGame {
-  playerId String
-  gameId   String
+  playerId   String
+  gameId     String
   isFinished Boolean @default(false)
-  player   Player @relation(fields: [playerId], references: [id])
-  game     Game   @relation(fields: [gameId], references: [id])
+  player     Player  @relation(fields: [playerId], references: [id])
+  game       Game    @relation(fields: [gameId], references: [id])
 
   @@id([playerId, gameId])
 }

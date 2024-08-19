@@ -49,8 +49,10 @@ onMounted(async () => {
         console.log('new question : ', question.value)
 
         controles.finished.then(async () => {
+            console.log('question.value.questionDuration', question.value.questionDuration)
             await sleep(question.value.questionDuration * 1000)
             showAnswers.value = true
+            await nextTick()
             const duration = question.value.answerDuration * 1000
             output.value = duration
             await executeTransition(output, 100, 0, {

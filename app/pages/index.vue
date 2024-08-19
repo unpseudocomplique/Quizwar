@@ -9,6 +9,8 @@ const { status, data, send, open, close } = useWebSocket(`ws://${runtimeConfig.p
 // const websocket = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/1/websocket`)
 const history = ref<string[]>([])
 const message = ref('')
+const isLoadingQuiz = ref(false)
+const quizTheme = ref('')
 
 watch(() => data.value, (newValue) => {
   console.log(newValue)
@@ -34,6 +36,16 @@ const sendMessage = async () => {
   send(new WebSocketMessage(actionTypeEnum.MESSAGE, room.value, message.value).toString())
   message.value = ''
 }
+
+const createQuiz = async () => {
+  isLoadingQuiz.value = true
+  const response = await $fetch('/api/quiz/create', {
+    method: 'POST',
+    query: { topic: quizTheme.value }
+  })
+  isLoadingQuiz.value = false
+  alert('Quiz created')
+}
 </script>
 
 <template>
@@ -43,6 +55,14 @@ const sendMessage = async () => {
 
       </UDashboardNavbar>
       <UDashboardPanelContent class="flex flex-col items-center justify-center gap-4">
+        <div class="flex gap-4 flex-wrap">
+
+          <u-input v-model="quizTheme" placeholder="Topic" size="xl" />
+          <u-button @click="createQuiz" size="xl" :disabled="isLoadingQuiz">
+            Create quiz
+          </u-button>
+        </div>
+
         <u-button @click="SeedDB" size="xl">
           Seed db
         </u-button>

@@ -48,7 +48,7 @@ const { text, copy, copied, isSupported } = useClipboard({ source: game.value.di
 
 onMounted(() => {
     const isDev = window.location.href.includes('localhost')
-    if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
+    // if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
 })
 
 watch(text, () => {
