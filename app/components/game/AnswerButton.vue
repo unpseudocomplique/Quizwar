@@ -19,7 +19,8 @@ defineEmits(['selectOption'])
 </script>
 
 <template>
-    <UButton @click="$emit('selectOption')" class="text-4xl flex justify-center scale-in-center" :color="color">
+    <UButton @click="$emit('selectOption')" class="text-xl md:text-4xl flex justify-center scale-in-center"
+        :color="color">
         {{ answer.display }}
     </UButton>
 </template>
