@@ -128,9 +128,17 @@ const shareGame = async () => {
 
             </UDashboardPanelContent>
             <UDashboardPanelContent v-else-if="!isGameOver">
-                <p>Question : {{ currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
-                <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
-                    @answer="getAnswer(currentQuestion, $event)"></game-question-item>
+
+                <u-card class="h-full flex flex-col"
+                    :ui="{ body: { base: 'h-full flex' }, padding: 'px-4 py-5 sm:p-6' }">
+                    <template #header>
+                        <p>Question : {{ currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
+
+                    </template>
+                    <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
+                        @answer="getAnswer(currentQuestion, $event)"></game-question-item>
+
+                </u-card>
             </UDashboardPanelContent>
         </UDashboardPanel>
     </UDashboardPage>

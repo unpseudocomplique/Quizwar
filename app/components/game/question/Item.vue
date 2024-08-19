@@ -6,7 +6,11 @@ import ThemeSound from '~/assets/sounds/music-theme.mp3'
 const question = defineModel()
 const emits = defineEmits(['answer'])
 
+const containerTheme = ref()
+const labelTheme = ref()
+const valueTheme = ref()
 
+const showQuestion = ref(false)
 const imageRef = ref()
 const questionRef = ref()
 const showAnswers = ref(false)
@@ -18,33 +22,50 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 onMounted(async () => {
 
-    const sequence = [
-        [imageRef.value, { opacity: [0, 1] }, { duration: 0.3 }],
-        [questionRef.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
+
+
+    const themeSequence = [
+        [containerTheme.value, { opacity: [0, 1] }, { duration: 0.3 }],
+        [labelTheme.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }],
+        [valueTheme.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
+
     ]
     // const audio = new Audio(ThemeSound)
     // audio.loop = true
 
     // audio.play()
-    const controles = timeline(sequence, {})
 
-    console.log('new question : ', question.value)
+    const controlesTheme = timeline(themeSequence, {})
+    controlesTheme.finished.then(async () => {
+        await sleep(3000)
+        showQuestion.value = true
+        await nextTick()
+        const sequence = [
+            [imageRef.value, { opacity: [0, 1] }, { duration: 0.3 }],
+            [questionRef.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
+        ]
+        const controles = timeline(sequence, {})
 
-    controles.finished.then(async () => {
-    await sleep(question.value.questionDuration * 1000)
-    showAnswers.value = true
-    const duration = question.value.answerDuration * 1000
-    output.value = duration
-    await executeTransition(output, 100, 0, {
-        duration,
-        transition: TransitionPresets.linear,
-    })
-    showResult.value = true
+        console.log('new question : ', question.value)
 
-    emits('answer', question.value.answers.filter(item => item.selected))
+        controles.finished.then(async () => {
+            await sleep(question.value.questionDuration * 1000)
+            showAnswers.value = true
+            const duration = question.value.answerDuration * 1000
+            output.value = duration
+            await executeTransition(output, 100, 0, {
+                duration,
+                transition: TransitionPresets.linear,
+            })
+            showResult.value = true
 
-    // audio.pause()
+            await sleep(200)
 
+            emits('answer', question.value.answers.filter(item => item.selected))
+
+            // audio.pause()
+
+        })
     })
 })
 
@@ -69,8 +90,16 @@ const selectAnwser = (answer) => {
 </script>
 
 <template>
-    <u-card class="h-full" :ui="{ body: { base: 'h-full' }, padding: 'px-4 py-5 sm:p-6' }">
-        <div class="gap-5 flex flex-col h-full" v-auto-animate>
+    <div class="gap-5 flex flex-col flex-1">
+        <div v-if="!showQuestion" ref="containerTheme"
+            class="flex flex-col h-full items-center justify-center opacity-0">
+            <p ref="labelTheme" class="opacity-0">Theme</p>
+            <p ref="valueTheme" class="text-center text-5xl font-bold opacity-0">
+                {{ question.theme }}
+            </p>
+        </div>
+        <template v-else>
+
             <span ref="imageRef" class=" mx-auto opacity-0 max-h-[50vh]">
                 <nuxt-img class="w-full h-full" :src="question.picture"></nuxt-img>
             </span>
@@ -83,6 +112,6 @@ const selectAnwser = (answer) => {
                     :color="answer.selected ? 'green' : colors[index]" :answer="answer" :key="answer.id"
                     :class="isOneSelected ? { '!opacity-60': !answer.selected } : ''" />
             </div>
-        </div>
-    </u-card>
+        </template>
+    </div>
 </template>
