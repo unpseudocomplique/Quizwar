@@ -103,7 +103,7 @@ const selectAnwser = (answer) => {
         <template v-else>
 
             <span ref="imageRef" class=" mx-auto opacity-0 max-h-[40vh]">
-                <nuxt-img class="w-full h-full" :src="question.picture"></nuxt-img>
+                <nuxt-img v-if="question.picture" class="w-full h-full" :src="question.picture"></nuxt-img>
             </span>
             <p ref="questionRef" class="text-center text-xl md:text-5xl font-bold opacity-0">
                 {{ question.display }}

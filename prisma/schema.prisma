@@ -34,7 +34,7 @@ model QuizQuestion {
 model Question {
   id               String          @id @default(cuid())
   display          String
-  picture          String
+  picture          String?
   promptPicture    String          @default("")
   questionDuration Int             @default(2)
   answerDuration   Int             @default(5)

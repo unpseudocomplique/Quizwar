@@ -22,8 +22,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom complet de Harry Potter ?',
                                 picture: '/harry_potter.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Harry Potter',
                                 answers: {
                                     create: [
@@ -52,8 +52,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom de la maison de Gryffindor ?',
                                 picture: '/gryffindor.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Maisons',
                                 answers: {
                                     create: [
@@ -82,8 +82,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Qui est le directeur de Poudlard pendant la majeure partie de la série ?',
                                 picture: '/dumbledore.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Personnages',
                                 answers: {
                                     create: [
@@ -112,8 +112,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom du frère de Sirius Black ?',
                                 picture: '/sirius_black.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Famille',
                                 answers: {
                                     create: [
@@ -142,8 +142,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quelle est la position de Harry Potter dans l\'équipe de Quidditch de Gryffindor ?',
                                 picture: '/quidditch.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Quidditch',
                                 answers: {
                                     create: [
@@ -172,8 +172,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom de la pierre magique qui confère l\'immortalité ?',
                                 picture: '/pierre.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Objets magiques',
                                 answers: {
                                     create: [
@@ -202,8 +202,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le sort utilisé pour repousser les Détraqueurs ?',
                                 picture: '/dementor.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Sorts',
                                 answers: {
                                     create: [
@@ -232,8 +232,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le prénom du père de Ron Weasley ?',
                                 picture: '/ron_weasley.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Famille',
                                 answers: {
                                     create: [
@@ -262,8 +262,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quelle est la créature magique qui garde le coffre de Gringotts ?',
                                 picture: '/goblin.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Créatures magiques',
                                 answers: {
                                     create: [
@@ -292,8 +292,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quelle est la langue que parle Harry Potter avec les serpents ?',
                                 picture: '/snake.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Langues',
                                 answers: {
                                     create: [
@@ -322,8 +322,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quelle est la potion qui rend invisible ?',
                                 picture: '/invisibility_cloak.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Potions',
                                 answers: {
                                     create: [
@@ -352,8 +352,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom de la sorcière qui a fondé Poudlard avec Godric Gryffondor ?',
                                 picture: '/helga_hufflepuff.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Fondateurs',
                                 answers: {
                                     create: [
@@ -382,8 +382,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom du elfe de maison de la famille Black ?',
                                 picture: '/house_elf.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Elfes de maison',
                                 answers: {
                                     create: [
@@ -412,8 +412,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom du magasin de baguettes magique de Ollivander ?',
                                 picture: '/wand_shop.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Magasins',
                                 answers: {
                                     create: [
@@ -442,8 +442,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom de la créature qui protège le secret de la Chambre des Secrets ?',
                                 picture: '/basilisk.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Créatures magiques',
                                 answers: {
                                     create: [
@@ -472,8 +472,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: 'Quel est le nom du directeur de Poudlard avant Albus Dumbledore ?',
                                 picture: '/armando_dipuet.webp',
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: 'Directeurs',
                                 answers: {
                                     create: [
@@ -509,8 +509,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le nom de la capitale de la Bretagne ?",
                                 picture: "/nope.webp", // URL de l'image si nécessaire
-                                questionDuration: 2, // durée en secondes
-                                answerDuration: 5, // durée en secondes
+                                questionDuration: 3, // durée en secondes
+                                answerDuration: 7, // durée en secondes
                                 theme: "Géographie",
                                 answers: {
                                     create: [
@@ -528,8 +528,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le nom du célèbre festival de musique bretonne qui se déroule à Lorient ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Culture",
                                 answers: {
                                     create: [
@@ -547,8 +547,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le principal fleuve de Bretagne ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Géographie",
                                 answers: {
                                     create: [
@@ -566,8 +566,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le nom du célèbre menhir situé à Carnac ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Histoire",
                                 answers: {
                                     create: [
@@ -585,8 +585,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le plat traditionnel breton à base de galette de sarrasin souvent servi avec divers garnitures ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Gastronomie",
                                 answers: {
                                     create: [
@@ -604,8 +604,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le nom du poète et écrivain breton connu pour son œuvre en langue bretonne ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Littérature",
                                 answers: {
                                     create: [
@@ -623,8 +623,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le nom de la baie célèbre pour ses marées extraordinaires, située en Bretagne ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Géographie",
                                 answers: {
                                     create: [
@@ -642,8 +642,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est l'élément emblématique de la Bretagne que l’on retrouve sur son drapeau ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Symbole",
                                 answers: {
                                     create: [
@@ -661,8 +661,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le nom du château médiéval situé à Fougères, un des plus grands châteaux fortifiés d’Europe ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Histoire",
                                 answers: {
                                     create: [
@@ -680,8 +680,8 @@ export default defineEventHandler(async (event) => {
                             create: {
                                 display: "Quel est le nom de la langue celtique traditionnelle parlée en Bretagne ?",
                                 picture: "/nope.webp",
-                                questionDuration: 2,
-                                answerDuration: 5,
+                                questionDuration: 3,
+                                answerDuration: 7,
                                 theme: "Langue",
                                 answers: {
                                     create: [

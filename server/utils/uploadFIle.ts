@@ -1,28 +1,34 @@
 import * as Minio from 'minio'
 
 const runtimeConfig = useRuntimeConfig()
-
-if (!runtimeConfig.BUKET_ENDPOINT) {
-    throw new Error('BUKET_ENDPOINT is not set')
+if (!runtimeConfig.bucketEndpoint) {
+    throw new Error('bucketEndpoint is not set')
 }
 
-if (!runtimeConfig.MINIO_USER) {
-    throw new Error('MINIO_USER is not set')
+if (!runtimeConfig.minioUser) {
+    throw new Error('minioUser is not set')
 }
 
-if (!runtimeConfig.MINIO_PASSWORD) {
-    throw new Error('MINIO_PASSWORD is not set')
+if (!runtimeConfig.minioPassword) {
+    throw new Error('minioPassword is not set')
 }
 
 
+function blobToStream(blob: Blob) {
+    const stream = require('stream');
+    const readable = new stream.PassThrough();
+    readable.end(blob);
+    return readable;
+}
 
-export const uploadFile = async (file: File, bucket: string = 'default', objectName: string) => {
+
+export const uploadFile = async (file: Buffer, bucket: string = 'default', objectName: string) => {
     const minioClient = new Minio.Client({
-        endPoint: runtimeConfig.BUKET_ENDPOINT as string,
-        port: 9000,
+        endPoint: runtimeConfig.bucketEndpoint as string,
+        port: 443,
         useSSL: true,
-        accessKey: runtimeConfig.MINIO_USER as string,
-        secretKey: runtimeConfig.MINIO_PASSWORD as string,
+        accessKey: runtimeConfig.minioUser as string,
+        secretKey: runtimeConfig.minioPassword as string,
     })
 
     // Check if the bucket exists
@@ -46,6 +52,8 @@ export const uploadFile = async (file: File, bucket: string = 'default', objectN
     // Upload the file with fPutObject
     // If an object with the same name exists,
     // it is updated with new data
-    await minioClient.fPutObject(bucket, objectName, file.name)
-    console.log('File ' + file.name + ' uploaded as object ' + objectName + ' in bucket ' + bucket)
+    // await minioClient.fPutObject(bucket, objectName, file.name)
+    await minioClient.putObject(bucket, objectName, file)
+    const imageLink = await minioClient.getObject(bucket, objectName)
+    console.log('File ' + ' uploaded as object ' + objectName + ' in bucket ' + bucket)
 }

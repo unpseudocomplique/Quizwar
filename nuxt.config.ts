@@ -52,6 +52,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    bucketEndpoint: undefined,
+    minioUser: undefined,
+    minioPassword: undefined,
     public: {
       domain: 'localhost:3000'
     }
