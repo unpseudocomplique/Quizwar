@@ -162,7 +162,7 @@ export default defineEventHandler(async (event) => {
             model: "gpt-4o-2024-08-06",
             messages: [
                 { role: "system", content: "You are a quiz generator. Create a quiz with questions, answers, and labels. The property promptPicture is used to generate the question image. L'image devrait être lié à une question mais ne pas représenter directement la réponse mais plutôt illustrer la question. QuestionSchema.theme est le thème de la question et devrait donner un indice sur le theme lié a la question." },
-                { role: "user", content: `Génère un quiz sur le sujet ${topic}. En français avec 15 questions et 4 réponses possible. Les réponses doivent être coérentes et pas trop proches pour être incorrectes avec seul une réponse correcte.` },
+                { role: "user", content: `Génère un quiz sur le sujet ${topic}. En français avec 15 questions et 4 réponses possible. Les réponses doivent être coérentes et pas trop proches pour être incorrectes avec seul une réponse correcte. Vérifie bien que dans le titre de la question il n'y a pas le libélé de la réponse. Par exemple, si la réponse est "Gryffindor" alors la question ne doit pas comporter "Gryffindor" dans son titre. Par exemple on pourrais avoir comme question: "Quel est la célèbre maison dans laquelle se trouve Harry Potter ?"` },
             ],
             response_format: zodResponseFormat(QuizSchema, "quiz"),
         });
