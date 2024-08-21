@@ -20,7 +20,7 @@ const responded = computed(() => {
 
 <template>
     <u-card>
-        <p>Question : {{ display }}</p>
+        <p>Question : {{ answer.question.display }}</p>
         <div class="flex gap-4">
             <p>Correction: </p>
             <p v-for="toAnswer in correctAnswer">{{ toAnswer.display }}</p>
