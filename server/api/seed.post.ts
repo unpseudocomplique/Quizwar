@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     await prisma.playerGame.deleteMany({});
     await prisma.question.deleteMany({});
     await prisma.label.deleteMany({});
-    // await prisma.player.deleteMany({});
+    await prisma.player.deleteMany({});
     await prisma.game.deleteMany({});
     await prisma.quiz.deleteMany({});
 
