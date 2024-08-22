@@ -10,11 +10,12 @@ const schemaCreatePlayer = z.object({
 
 type TSchemaCreatePlayer = z.infer<typeof schemaCreatePlayer>
 
-
 const stateCreatePlayer = ref({
     username: '',
     creating: false
 })
+
+const isUserNameChoosed = ref(false)
 
 const createPLayer = async (event: FormSubmitEvent<TSchemaCreatePlayer>) => {
 
@@ -51,8 +52,9 @@ const createPLayer = async (event: FormSubmitEvent<TSchemaCreatePlayer>) => {
 
             <UDashboardPanelContent>
                 <div class="flex flex-col items-center justify-center gap-4 h-full">
-
-                    <u-card class="w-[600px] max-w-full">
+                    <u-button to="/api/auth/google" icon="i-logos-google-icon" label="Login with GitHub" color="black"
+                        external>Login with Google</u-button>
+                    <!-- <u-card class="w-[600px] max-w-full">
                         <UForm :schema="schemaCreatePlayer" :state="stateCreatePlayer" class="space-y-4"
                             @submit="createPLayer">
                             <UFormGroup label="Votre username" name="username">
@@ -64,7 +66,7 @@ const createPLayer = async (event: FormSubmitEvent<TSchemaCreatePlayer>) => {
                                 Création de mon profil joueur
                             </UButton>
                         </UForm>
-                    </u-card>
+                    </u-card> -->
                 </div>
             </UDashboardPanelContent>
         </UDashboardPanel>

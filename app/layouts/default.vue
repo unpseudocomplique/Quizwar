@@ -61,7 +61,11 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
     <UDashboardPanel :width="250" :resizable="{ min: 200, max: 300 }" collapsible>
       <UDashboardNavbar class="!border-transparent" :ui="{ left: 'flex-1' }">
         <template #left v-if="loggedIn">
-          <p>{{ user.username }}</p>
+          <router-link to="/auth/setup" class="flex items-center gap-2">
+
+            <u-avatar :src="user.picture" />
+            <p class="line-clamp-1">{{ user.username }}</p>
+          </router-link>
         </template>
       </UDashboardNavbar>
 

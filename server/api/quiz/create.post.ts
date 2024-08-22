@@ -151,6 +151,14 @@ export default defineEventHandler(async (event) => {
     // return {}
     // Initialize OpenAI
 
+    const { user } = await requireUserSession(event)
+
+    const adminEmails = ['mathnewph@gmail.com', 'leptitclementmoreau@gmail.com']
+
+    if (!adminEmails.includes(user.email)) {
+        return setResponseStatus(event, 400, 'You are not allowed to create a quiz')
+    }
+
     const topicFromUser = getQuery(event).topic as string
     if (!topicFromUser) {
         return setResponseStatus(event, 400, 'Missing topic')

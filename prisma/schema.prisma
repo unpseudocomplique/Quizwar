@@ -88,7 +88,9 @@ model Game {
 
 model Player {
   id       String         @id @default(cuid())
+  picture  String
   username String
+  email    String         @unique
   games    PlayerGame[]
   answers  PlayerAnswer[]
 }
