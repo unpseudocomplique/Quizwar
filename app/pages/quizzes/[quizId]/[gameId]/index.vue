@@ -2,39 +2,36 @@
 import { computed, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import { useShare } from '@vueuse/core'
+import { ca } from 'date-fns/locale';
 
 const { share } = useShare()
+
 
 const runtimeConfig = useRuntimeConfig()
 const { status, data, send, open, close, } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
-
-const players = ref([
-
-])
-
+const gameStore = useGameStore()
+gameStore.resetGame()
 
 const route = useRoute()
 const quizId = route.params.quizId
 
 const gameId = route.params.gameId as string
-send(JSON.stringify({ type: 'join', room: gameId, }))
+send(JSON.stringify({ type: 'join', room: gameId, player: toRaw(user.value) }))
 
 watch(() => data.value, (newValue) => {
-    console.log('--------NEW DATA--------')
     const parsed = JSON.parse(newValue)
-    console.log(parsed)
     if (parsed.type === 'startgame') {
         isGameStarted.value = true
     }
 
     if (parsed.type === "answer") {
-
+        gameStore.addAnswser(parsed.answer, parsed.player)
     }
 
     if (parsed.type === "join") {
-
+        gameStore.addPlayer(parsed.player)
     }
 }, { deep: true })
 
@@ -48,7 +45,7 @@ const { text, copy, copied, isSupported } = useClipboard({ source: game.value.di
 
 onMounted(() => {
     const isDev = window.location.href.includes('localhost')
-    // if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
+    if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 4)
 })
 
 watch(text, () => {
@@ -60,6 +57,7 @@ const currentQuestion = ref(null)
 const currentQuestionIndex = ref(0)
 const isGameOver = ref(false)
 const isGameStarted = ref(false)
+const showScore = ref(false)
 
 currentQuestion.value = game.value.quiz.questions[currentQuestionIndex.value].question
 const getAnswer = async (question, answers) => {
@@ -69,21 +67,35 @@ const getAnswer = async (question, answers) => {
     // const answerIndex = answers.length === 0 ? -1 : game.value.quiz.questions[questionIndex].question.answers.findIndex(item => item.id === answers.find(answer => answer.selected).id)
 
     // if (answerIndex > -1) game.value.quiz.questions[questionIndex].question.answers[answerIndex].selected = true
+    try {
 
-    const answer = await $fetch('/api/player/answser', {
-        method: 'POST',
-        body: { questionId: question.id, gameId: gameId, answerIds: answers.map(answer => answer.id) }
-    })
+        const answer = await $fetch('/api/player/answser', {
+            method: 'POST',
+            body: { questionId: question.id, gameId: gameId, answerIds: answers.map(answer => answer.id) }
+        })
+        send(JSON.stringify({ type: 'answer', room: gameId, player: user.value, answer: answer }))
 
-    send(JSON.stringify({ type: 'answer', room: gameId, player: user.value, answer: answer }))
+        gameStore.addAnswser(answer, user.value)
+    } catch (e) {
+        console.log(e)
+    }
 
-    if (questionIndex === game.value.quiz.questions.length - 1) {
+    if (currentQuestionIndex.value % 2 === 0) {
+        showScore.value = true
+        await sleep(5000)
+        showScore.value = false
+    }
+    nextQuestion()
+}
+
+const nextQuestion = () => {
+    if (currentQuestionIndex.value === game.value.quiz.questions.length - 1) {
         const router = useRouter()
         router.push(`/quizzes/${quizId}/${gameId}/score`)
         return;
     }
 
-    currentQuestionIndex.value = questionIndex + 1
+    currentQuestionIndex.value = currentQuestionIndex.value + 1
 
     currentQuestion.value = game.value.quiz.questions[currentQuestionIndex.value].question
 }
@@ -92,10 +104,6 @@ const startGame = async () => {
     send(JSON.stringify({ type: 'startgame', room: gameId }))
     isGameStarted.value = true
 }
-
-const linkUrl = computed(() => {
-    return window.location.host
-})
 
 const shareGame = async () => {
     share({
@@ -113,6 +121,7 @@ const shareGame = async () => {
             <UDashboardNavbar title="Home">
             </UDashboardNavbar>
             <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
+
                 <p class="cursor-pointer text-xl" @click="copy(game.display)">Game code : {{ game.display }} <icon
                         name="i-ph-clipboard-text-thin"></icon>
                 </p>
@@ -126,10 +135,11 @@ const shareGame = async () => {
                 <h1 class="text-2xl mt-10">Are you ready ?</h1>
                 <UButton @click="startGame" color="green" size="xl">Start</UButton>
 
+
             </UDashboardPanelContent>
             <UDashboardPanelContent v-else-if="!isGameOver">
 
-                <u-card class="h-full flex flex-col"
+                <u-card class="h-full flex flex-col" v-if="!showScore"
                     :ui="{ body: { base: 'h-full flex' }, padding: 'px-4 py-5 sm:p-6' }">
                     <template #header>
                         <p>Question : {{ currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
@@ -139,6 +149,16 @@ const shareGame = async () => {
                         @answer="getAnswer(currentQuestion, $event)"></game-question-item>
 
                 </u-card>
+                <u-card v-else class="h-full flex flex-col"
+                    :ui="{ body: { base: 'h-full flex' }, padding: 'px-4 py-5 sm:p-6' }">
+                    <template #header>
+                        <p>Comment se déroule la partie a la question : {{ currentQuestionIndex + 1 }} ?</p>
+
+                    </template>
+                    <game-score-table />
+
+                </u-card>
+
             </UDashboardPanelContent>
         </UDashboardPanel>
     </UDashboardPage>

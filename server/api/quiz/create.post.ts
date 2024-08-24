@@ -19,9 +19,33 @@ const openai = new OpenAI();
 
 // Utiliser la fonction pour créer un File
 
-const quizParsedToPrismaCreate = (quiz) => {
+
+
+
+const quizParsedToPrismaCreate = async ({ themes: themeSelected, ...quiz }, { themes = [] }) => {
+    const [found, notFound] = themeSelected.reduce(([found, notFound], theme) => {
+        const foundTheme = themes.find(currentTheme => currentTheme.display === theme.display)
+        if (foundTheme) {
+            return [[...found, foundTheme], notFound]
+        }
+        return [found, [...notFound, theme]]
+    }, [[], []])
+
+    await prisma.theme.createMany({ data: notFound.map(theme => ({ display: theme.display })) })
+    const arrayOfTheme = notFound.map(theme => theme.display)
+    const insertedThemes = await prisma.theme.findMany({ where: { display: { in: arrayOfTheme } } })
+
+    const arrayOfIdsThemes = new Set()
+    insertedThemes.forEach(theme => arrayOfIdsThemes.add(theme.id))
+    found.forEach(theme => arrayOfIdsThemes.add(theme.id))
+
     const quizUpdated = {
         ...quiz,
+        themes: {
+            createMany: {
+                data: [...arrayOfIdsThemes].map(themeId => ({ themeId }))
+            }
+        },
         questions: {
             create: quiz.questions.map(currentQuestion => {
                 const { imagePrompt, ...question } = currentQuestion
@@ -91,7 +115,10 @@ const quizParsedToPrismaCreate = (quiz) => {
 
 
 
-
+const ThemeSchema = z.object({
+    // id: z.string().optional().describe(`This is the id of the theme. This is a global name that can be used to identify the theme. If the theme is new, this property is undefined`),
+    display: z.string().describe(`A quiz can have multiple themes. This is the name of the theme. This is a global name that can be used to identify the theme. For exemple for a quiz on "Harry Potter" theme could be "Harry Potter", "Sorcier", "Surnaturel" ou "Magie"`),
+})
 
 const AnswerSchema = z.object({
     display: z.string(),
@@ -112,7 +139,8 @@ const QuestionSchema = z.object({
 
 const QuizSchema = z.object({
     display: z.string(),
-    questions: z.array(QuestionSchema)
+    questions: z.array(QuestionSchema),
+    themes: z.array(ThemeSchema)
 });
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -164,13 +192,35 @@ export default defineEventHandler(async (event) => {
         return setResponseStatus(event, 400, 'Missing topic')
     }
 
+    const themesResponse = await prisma.theme.findMany({ where: { isActive: true, isDeleted: false } })
     // Function to generate a quiz
     async function generateQuiz(topic: string) {
         const completion = await openai.beta.chat.completions.parse({
             model: "gpt-4o-2024-08-06",
             messages: [
-                { role: "system", content: "You are a quiz generator. Create a quiz with questions, answers, and labels. The property promptPicture is used to generate the question image. L'image devrait être lié à une question mais ne pas représenter directement la réponse mais plutôt illustrer la question. QuestionSchema.theme est le thème de la question et devrait donner un indice sur le theme lié a la question tout en étant très évasif." },
-                { role: "user", content: `Génère un quiz sur le sujet ${topic}. En français avec 15 questions et 4 réponses possible. Les réponses doivent être coérentes et pas trop proches pour être incorrectes avec seul une réponse correcte. Vérifie bien que dans le titre de la question il n'y a pas le libélé de la réponse. Par exemple, si la réponse est "Gryffindor" alors la question ne doit pas comporter "Gryffindor" dans son titre. Par exemple on pourrais avoir comme question: "Quel est la célèbre maison dans laquelle se trouve Harry Potter ?"` },
+                {
+                    role: "system", content: `You are a quiz generator. 
+                    Create a quiz with questions, answers, and labels. 
+                    The property promptPicture is used to generate the question image.
+                    L'image devrait être lié à une question mais ne pas représenter directement la réponse mais plutôt illustrer la question. 
+                    QuestionSchema.theme est le thème de la question et devrait donner un indice sur le theme lié a la question tout en étant très évasif.`
+                },
+                {
+                    role: "user", content: `La propriété themes du quiz va permettre de classifier le quiz. Trouve des thèmes en rapport avec ${topic}.
+                        Vous pouvez utiliser les thèmes suivants : ${JSON.stringify(themesResponse)} 
+                        or create a new theme but if it's a new theme the is property HAVE TO BE undefined THIS IS VERY IMPORTANT!
+                        The theme is a global name that does not include specific information of the quiz.
+                        A quiz can have a maximum of 3 themes and a minimum of 1. Reuse the already created themes if possible.
+                        Par exemple si le quiz est sur les Manga, on pourrait utiliser le thème "Histoire", "livre", "Culture Japonaise", "Fantastique", "Science fiction" ou "Aventure".
+                ` },
+                {
+                    role: "user", content: `Génère un quiz sur le sujet ${topic}. 
+                En français avec 15 questions et 4 réponses possible. 
+                Les réponses doivent être coérentes et pas trop proches pour être incorrectes avec seul une réponse correcte.
+                Vérifie bien que dans le titre de la question il n'y a pas le libélé de la réponse. 
+                Par exemple, si la réponse est "Gryffindor" alors la question ne doit pas comporter "Gryffindor" dans son titre. 
+                Par exemple on pourrais avoir comme question: "Quel est la célèbre maison dans laquelle se trouve Harry Potter ?"`
+                },
             ],
             response_format: zodResponseFormat(QuizSchema, "quiz"),
         });
@@ -185,8 +235,7 @@ export default defineEventHandler(async (event) => {
     try {
         const tempQuiz = await generateQuiz(topicFromUser)
 
-        const quiz = quizParsedToPrismaCreate(tempQuiz)
-
+        const quiz = await quizParsedToPrismaCreate(tempQuiz, { themes: themesResponse })
         const quizCreated = await prisma.quiz.create({ data: quiz, include: { questions: { include: { question: { include: { answers: true } } } } } })
 
         // const questionsImages = await Promise.all(await generateImagesForQuestions(quizCreated.questions))

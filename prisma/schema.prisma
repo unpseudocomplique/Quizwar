@@ -18,8 +18,28 @@ model Quiz {
   display   String
   isDeleted Boolean        @default(false)
   isActive  Boolean        @default(true)
+  picture   String?
   questions QuizQuestion[]
   Game      Game[]
+  themes    QuizTheme[]
+}
+
+model Theme {
+  id        String         @id @default(cuid())
+  display   String
+  isDeleted Boolean        @default(false)
+  isActive  Boolean        @default(true)
+  picture   String?
+  quizzes   QuizTheme[]
+}
+
+model QuizTheme {
+  quizId  String
+  themeId String
+  quiz    Quiz   @relation(fields: [quizId], references: [id])
+  theme   Theme  @relation(fields: [themeId], references: [id])
+
+  @@id([quizId, themeId])
 }
 
 model QuizQuestion {

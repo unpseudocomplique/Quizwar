@@ -9,7 +9,9 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxt/image',
     '@formkit/auto-animate/nuxt',
-    "nuxt-auth-utils"
+    "nuxt-auth-utils",
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt'
   ],
   nitro: {
     experimental:{
@@ -26,8 +28,6 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    // Temporary workaround for prerender regression. see https://github.com/nuxt/nuxt/issues/27490
-    '/': { prerender: true }
   },
 
   devtools: {

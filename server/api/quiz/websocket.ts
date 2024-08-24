@@ -18,9 +18,9 @@ export default defineWebSocketHandler({
 })
 
 const events = {
-    join: (peer, data: { type: 'join', room: string }) => {
+    join: (peer, data: { type: 'join', room: string, player: { id: string, username: string, email: string } }) => {
         peer.subscribe(data.room);
-        peer.publish(data.room, { type: 'join', room: data.room });
+        peer.publish(data.room, { type: 'join', room: data.room, player: data.player });
     },
     answer: (peer, data: { type: 'answer', room: string, player: { id: string, username: string } }) => {
         peer.publish(data.room, data)
