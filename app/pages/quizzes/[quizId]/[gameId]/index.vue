@@ -59,6 +59,8 @@ const isGameOver = ref(false)
 const isGameStarted = ref(false)
 const showScore = ref(false)
 
+const isLastQuestion = computed(() => currentQuestionIndex.value === game.value.quiz.questions.length - 1)
+
 currentQuestion.value = game.value.quiz.questions[currentQuestionIndex.value].question
 const getAnswer = async (question, answers) => {
     const questionIndex = game.value.quiz.questions.findIndex(item => item.questionId === question.id)
@@ -80,7 +82,7 @@ const getAnswer = async (question, answers) => {
         console.log(e)
     }
 
-    if (currentQuestionIndex.value % 2 === 0) {
+    if (!isLastQuestion.value && currentQuestionIndex.value % 5 === 0) {
         showScore.value = true
         await sleep(5000)
         showScore.value = false
@@ -89,7 +91,7 @@ const getAnswer = async (question, answers) => {
 }
 
 const nextQuestion = () => {
-    if (currentQuestionIndex.value === game.value.quiz.questions.length - 1) {
+    if (isLastQuestion.value) {
         const router = useRouter()
         router.push(`/quizzes/${quizId}/${gameId}/score`)
         return;
