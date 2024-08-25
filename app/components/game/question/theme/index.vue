@@ -14,6 +14,7 @@ const containerTheme = ref()
 const labelTheme = ref()
 const valueTheme = ref()
 const showPowers = ref(false)
+const showSelectPlayerToBlock = ref(false)
 
 onMounted(async () => {
 
@@ -36,6 +37,18 @@ onMounted(async () => {
         emits('finished')
     })
 })
+
+const blockPlayer = async (player) => {
+    showSelectPlayerToBlock.value = false
+    powers.value[PowerType.BLOCK].selected = true
+    const power = await $fetch(`/api/game/${gameStore.game.id}/question/${question.value.id}/usePower`, {
+        method: 'POST',
+        body: { power: PowerType.BLOCK, targetPlayerId: player.id }
+    })
+
+    gameStore.usedPowers.push(power)
+    sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+}
 
 const powers = ref({
     [PowerType.FIFTY_FIFTY]: {
@@ -65,6 +78,9 @@ const powers = ref({
         display: 'Bloquer',
         description: 'Choisissez votre cible et empêchez-la de répondre.',
         icon: 'i-noto-no-entry',
+        click: async () => {
+            showSelectPlayerToBlock.value = true
+        },
         selected: false
     },
     [PowerType.DOUBLE_POINTS]: {
@@ -90,17 +106,28 @@ const isOnePowerSelected = computed(() => {
                 {{ question.theme }}
             </p>
         </div>
-        <div v-if="showPowers" class="grid grid-cols-2 gap-4 h-full">
-            <u-button v-for="(value, key) in gameStore.availablePowers" @click="powers[key].click()" :key="key"
-                :disabled="value === 0 || isOnePowerSelected"
-                class="text-xl md:text-4xl justify-center scale-in-center flex flex-col"
-                :color="powers[key].selected ? 'green' : undefined">
-                <span class="flex gap-4 items-center">
+        <template v-if="showPowers">
+            <game-question-theme-select-player :players="gameStore.allOtherPlayers" v-if="showSelectPlayerToBlock"
+                @close="showSelectPlayerToBlock = false" @selected="blockPlayer" />
+            <div v-else class="grid grid-cols-2 gap-4 h-full">
+                <u-button v-for="(value, key) in gameStore.availablePowers" @click="powers[key].click()" :key="key"
+                    :disabled="value === 0 || isOnePowerSelected"
+                    class="text-xl md:text-4xl justify-center scale-in-center flex flex-col"
+                    :color="powers[key].selected ? 'green' : value === 0 ? 'gray' : isOnePowerSelected ? 'gray' : undefined">
+                    <span class="flex gap-4 items-center">
 
-                    <icon :name="powers[key].icon"></icon> {{ powers[key].display }}
-                </span>
-                <span class="text-5xl">{{ value }}</span>
-            </u-button>
-        </div>
+                        <icon :name="powers[key].icon"></icon> {{ powers[key].display }}
+                    </span>
+                    <span class="text-5xl">
+                        <template v-if="value === 0 && !powers[key].selected">
+                            finito
+                        </template>
+                        <template v-else>
+                            {{ value }}
+                        </template>
+                    </span>
+                </u-button>
+            </div>
+        </template>
     </div>
 </template>

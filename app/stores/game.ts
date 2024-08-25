@@ -84,6 +84,10 @@ export const useGameStore = defineStore('game', {
                 return acc
             }, initialPowers)
 
+        },
+        allOtherPlayers(store) {
+            const { user } = useUserSession()
+            return store.players.filter(player => player.player.id !== user.value.id)
         }
     }
 })
