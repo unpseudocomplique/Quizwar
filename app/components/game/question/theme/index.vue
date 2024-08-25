@@ -37,7 +37,7 @@ onMounted(async () => {
     })
 })
 
-const powers = {
+const powers = ref({
     [PowerType.FIFTY_FIFTY]: {
         display: '50/50',
         description: 'Vous enlevez 2 mauvaises réponses des choix proposés.',
@@ -50,25 +50,34 @@ const powers = {
 
             gameStore.usedPowers.push(power)
             sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
-        }
+            powers.value[PowerType.FIFTY_FIFTY].selected = true
+        },
+        selected: false
 
     },
     [PowerType.STEAL_POINTS]: {
         display: 'Vol de points',
         description: 'Choisissez votre cible et volez les points optenus a la fin de la question.',
-        icon: 'i-noto-ninja'
+        icon: 'i-noto-ninja',
+        selected: false
     },
     [PowerType.BLOCK]: {
         display: 'Bloquer',
         description: 'Choisissez votre cible et empêchez-la de répondre.',
-        icon: 'i-noto-no-entry'
+        icon: 'i-noto-no-entry',
+        selected: false
     },
     [PowerType.DOUBLE_POINTS]: {
         display: 'Double points',
         description: 'Doublez les points obtenus à cette question.',
-        icon: 'i-noto-money-mouth-face'
+        icon: 'i-noto-money-mouth-face',
+        selected: false
     }
-}
+})
+
+const isOnePowerSelected = computed(() => {
+    return Object.values(powers.value).some(power => power.selected)
+})
 
 </script>
 
@@ -83,7 +92,9 @@ const powers = {
         </div>
         <div v-if="showPowers" class="grid grid-cols-2 gap-4 h-full">
             <u-button v-for="(value, key) in gameStore.availablePowers" @click="powers[key].click()" :key="key"
-                :disabled="value === 0" class="text-xl md:text-4xl justify-center scale-in-center flex flex-col">
+                :disabled="value === 0 || isOnePowerSelected"
+                class="text-xl md:text-4xl justify-center scale-in-center flex flex-col"
+                :color="powers[key].selected ? 'green' : undefined">
                 <span class="flex gap-4 items-center">
 
                     <icon :name="powers[key].icon"></icon> {{ powers[key].display }}

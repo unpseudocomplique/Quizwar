@@ -6,13 +6,14 @@ export default defineEventHandler(async (event) => {
     const { user } = await requireUserSession(event)
     const body = await readBody(event);
 
-    const { power } = body as { power: PowerType }
+    const { power, targetPlayerId } = body as { power: PowerType, targetPlayerId?: string }
 
     const usedPower = await prisma.usedPower.create({
         data: {
             gameId: gameId,
             questionId: questionId,
             originPlayerId: user.id,
+            ...(targetPlayerId ? { targetPlayerId } : power === 'FIFTY_FIFTY' || power === 'DOUBLE_POINTS' ? { targetPlayerId: user.id } : {}),
             power: power,
         }
     })

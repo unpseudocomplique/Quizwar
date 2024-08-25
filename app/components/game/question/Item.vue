@@ -3,8 +3,11 @@ import { timeline } from "motion"
 import { TransitionPresets, useTransition, executeTransition } from '@vueuse/core'
 import ThemeSound from '~/assets/sounds/music-theme.mp3'
 
+const { user } = useUserSession()
+
 const question = defineModel()
 const emits = defineEmits(['answer'])
+const gameStore = useGameStore()
 
 const showQuestion = ref(false)
 const imageRef = ref()
@@ -67,6 +70,33 @@ const selectAnwser = (answer) => {
     });
 }
 
+const answerToDisplay = computed(() => {
+    const questionPowers = gameStore.usedPowers.filter(power => power.questionId === question.value.id && power.targetPlayerId === user.value.id)
+
+    if (questionPowers.some(power => power.power === PowerType.FIFTY_FIFTY)) {
+
+        const answsersNotCorrect = question.value.answers.filter(answer => !answer.isCorrect)
+        const correct = question.value.answers.filter(answer => answer.isCorrect)
+
+        answsersNotCorrect.sort((a, b) => Math.random() > 0.5 ? -1 : 1)
+
+        answsersNotCorrect.splice(0, 2)
+
+        const allResponses = [...answsersNotCorrect, ...correct]
+
+        allResponses.sort((a, b) => Math.random() > 0.5 ? -1 : 1)
+        return allResponses
+
+    }
+
+    return question.value.answers
+})
+
+const shouldBeBlocked = computed(() => {
+    const questionPowers = gameStore.usedPowers.filter(power => power.questionId === question.value.id && power.targetPlayerId === user.value.id)
+
+    return questionPowers.some(power => power.power === PowerType.BLOCK)
+})
 
 </script>
 
@@ -83,8 +113,9 @@ const selectAnwser = (answer) => {
             </p>
             <UProgress v-if="showAnswers" :value="output" />
             <div v-if="showAnswers" class="grid grid-cols-2 gap-4 h-full">
-                <game-answer-button @select-option="selectAnwser(answer)" v-for="(answer, index) in question.answers"
-                    :color="answer.selected ? 'green' : colors[index]" :answer="answer" :key="answer.id"
+                <game-answer-button :disabled="shouldBeBlocked" @select-option="selectAnwser(answer)"
+                    v-for="(answer, index) in answerToDisplay" :color="answer.selected ? 'green' : colors[index]"
+                    :answer="answer" :key="answer.id"
                     :class="isOneSelected ? { '!opacity-60': !answer.selected } : ''" />
             </div>
         </template>

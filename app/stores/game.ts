@@ -23,6 +23,8 @@ export const useGameStore = defineStore('game', {
         resetGame: function () {
             this.players = []
             this.currentQuestionIndex = 0
+            this.usedPowers = []
+            this.game = null
         },
         addAnswser: function (answser, player) {
             let playerIndex = this.players.findIndex(item => item.player.id === player.id)
