@@ -25,10 +25,10 @@ model Quiz {
 }
 
 model Theme {
-  id        String         @id @default(cuid())
+  id        String      @id @default(cuid())
   display   String
-  isDeleted Boolean        @default(false)
-  isActive  Boolean        @default(true)
+  isDeleted Boolean     @default(false)
+  isActive  Boolean     @default(true)
   picture   String?
   quizzes   QuizTheme[]
 }
@@ -65,6 +65,7 @@ model Question {
   labels           QuestionLabel[]
   quizzes          QuizQuestion[]
   PlayerAnswer     PlayerAnswer[]
+  UsedPower        UsedPower[]
 }
 
 model Answer {
@@ -104,15 +105,18 @@ model Game {
   quiz         Quiz           @relation(fields: [quizId], references: [id])
   players      PlayerGame[]
   PlayerAnswer PlayerAnswer[]
+  UsedPower    UsedPower[]
 }
 
 model Player {
-  id       String         @id @default(cuid())
-  picture  String
-  username String
-  email    String         @unique
-  games    PlayerGame[]
-  answers  PlayerAnswer[]
+  id        String         @id @default(cuid())
+  picture   String
+  username  String
+  email     String         @unique
+  games     PlayerGame[]
+  answers   PlayerAnswer[]
+  powersUsed     UsedPower[]    @relation("OriginPlayerRelation")
+  powersReceived UsedPower[]    @relation("TargetPlayerRelation")
 }
 
 model PlayerGame {
@@ -139,4 +143,32 @@ model PlayerAnswer {
   game     Game     @relation(fields: [gameId], references: [id])
 
   @@unique([playerId, questionId, gameId])
+}
+
+enum PowerType {
+  FIFTY_FIFTY
+  STEAL_POINTS
+  BLOCK
+  DOUBLE_POINTS
+}
+
+model UsedPower {
+  id             String    @id @default(cuid())
+  power          PowerType
+  questionId     String
+  gameId         String
+  originPlayerId String
+  targetPlayerId String?
+
+  question     Question @relation(fields: [questionId], references: [id])
+  game         Game     @relation(fields: [gameId], references: [id])
+  originPlayer Player   @relation("OriginPlayerRelation", fields: [originPlayerId], references: [id])
+  targetPlayer Player?  @relation("TargetPlayerRelation", fields: [targetPlayerId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([originPlayerId])
+  @@index([targetPlayerId])
+  @@index([questionId])
+  @@index([gameId])
 }

@@ -6,10 +6,6 @@ import ThemeSound from '~/assets/sounds/music-theme.mp3'
 const question = defineModel()
 const emits = defineEmits(['answer'])
 
-const containerTheme = ref()
-const labelTheme = ref()
-const valueTheme = ref()
-
 const showQuestion = ref(false)
 const imageRef = ref()
 const questionRef = ref()
@@ -19,25 +15,8 @@ const showResult = ref(false)
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-
-onMounted(async () => {
-
-
-
-    const themeSequence = [
-        [containerTheme.value, { opacity: [0, 1] }, { duration: 0.3 }],
-        [labelTheme.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }],
-        [valueTheme.value, { opacity: [0, 1] }, { duration: 0.3, delay: 0.3 }]
-
-    ]
-    // const audio = new Audio(ThemeSound)
-    // audio.loop = true
-
-    // audio.play()
-
-    const controlesTheme = timeline(themeSequence, {})
-    controlesTheme.finished.then(async () => {
-        await sleep(3000)
+const onThemeFinished = async () => {
+    await sleep(3000)
         showQuestion.value = true
         await nextTick()
         const sequence = [
@@ -48,8 +27,7 @@ onMounted(async () => {
 
         console.log('new question : ', question.value)
 
-        controles.finished.then(async () => {
-            console.log('question.value.questionDuration', question.value.questionDuration)
+    controles.finished.then(async () => {
             await sleep(question.value.questionDuration * 1000)
             showAnswers.value = true
             await nextTick()
@@ -68,8 +46,7 @@ onMounted(async () => {
             // audio.pause()
 
         })
-    })
-})
+}
 
 const isOneSelected = computed(() => {
     return question.value.answers.some(item => item.selected)
@@ -93,13 +70,7 @@ const selectAnwser = (answer) => {
 
 <template>
     <div class="gap-5 flex flex-col flex-1">
-        <div v-if="!showQuestion" ref="containerTheme"
-            class="flex flex-col h-full items-center justify-center opacity-0">
-            <p ref="labelTheme" class="opacity-0">Theme</p>
-            <p ref="valueTheme" class="text-center text-xl md:text-5xl font-bold opacity-0">
-                {{ question.theme }}
-            </p>
-        </div>
+        <game-question-theme @finished="onThemeFinished" v-if="!showQuestion" v-model="question" />
         <template v-else>
 
             <span ref="imageRef" class=" mx-auto opacity-0 max-h-[40vh]">

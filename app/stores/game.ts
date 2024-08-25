@@ -1,12 +1,20 @@
+export enum PowerType {
+    FIFTY_FIFTY = 'FIFTY_FIFTY',
+    STEAL_POINTS = 'STEAL_POINTS',
+    BLOCK = 'BLOCK',
+    DOUBLE_POINTS = 'DOUBLE_POINTS'
+}
 export const useGameStore = defineStore('game', {
     state: () => {
 
         const players = ref([])
         const currentQuestionIndex = ref(0)
+        const usedPowers = ref([])
 
         return {
             players,
-            currentQuestionIndex
+            currentQuestionIndex,
+            usedPowers
         }
     },
     actions: {
@@ -55,6 +63,23 @@ export const useGameStore = defineStore('game', {
                 })
                 return acc
             }, [])
+        },
+        availablePowers(store) {
+            const initialPowers = {
+                FIFTY_FIFTY: 2,
+                STEAL_POINTS: 2,
+                BLOCK: 2,
+                DOUBLE_POINTS: 2
+            }
+            const { user } = useUserSession()
+            const playerId = user.value.id
+            return store.usedPowers.reduce((acc, power) => {
+                if (power.originPlayerId === playerId) {
+                    acc[power.power] -= 1
+                }
+                return acc
+            }, initialPowers)
+
         }
     }
 })

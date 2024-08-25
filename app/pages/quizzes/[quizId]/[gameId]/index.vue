@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import { useShare } from '@vueuse/core'
-import { ca } from 'date-fns/locale';
 
 const { share } = useShare()
 
@@ -10,6 +9,8 @@ const { share } = useShare()
 const runtimeConfig = useRuntimeConfig()
 const { status, data, send, open, close, } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
 const { loggedIn, user, session, fetch, clear } = useUserSession()
+
+provide('sendGameInformation', (message: string) => send(message))
 
 const gameStore = useGameStore()
 gameStore.resetGame()
@@ -37,9 +38,17 @@ watch(() => data.value, (newValue) => {
 
 
 const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
+const requestPowers = useFetch(`/api/game/${gameId}/usedPower`)
+const requestScore = useFetch(`/api/game/${gameId}/score`)
 
 const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
-const { data: gameAnswers } = await useFetch(`/api/game/${gameId}/score`)
+
+const { data: powers } = await requestPowers
+const { data: gameAnswers } = await requestScore
+
+powers.value.forEach(power => {
+    gameStore.usedPowers.push(power)
+})
 
 gameAnswers.value.scores.forEach(score => {
     score.answers.forEach(answer => {
