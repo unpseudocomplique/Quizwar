@@ -5,6 +5,7 @@ import { PowerType } from '~/stores/game'
 
 const question = defineModel()
 const gameStore = useGameStore()
+const { user } = useUserSession()
 
 const emits = defineEmits(['finished'])
 const sendGameInformation = inject('sendGameInformation') as (message: string) => void
@@ -40,7 +41,16 @@ const powers = {
     [PowerType.FIFTY_FIFTY]: {
         display: '50/50',
         description: 'Vous enlevez 2 mauvaises réponses des choix proposés.',
-        icon: 'i-noto-detective'
+        icon: 'i-noto-detective',
+        click: async () => {
+            const power = await $fetch(`/api/game/${gameStore.game.id}/question/${question.value.id}/usePower`, {
+                method: 'POST',
+                body: { power: PowerType.FIFTY_FIFTY }
+            })
+
+            gameStore.usedPowers.push(power)
+            sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+        }
 
     },
     [PowerType.STEAL_POINTS]: {
@@ -72,8 +82,8 @@ const powers = {
             </p>
         </div>
         <div v-if="showPowers" class="grid grid-cols-2 gap-4 h-full">
-            <u-button v-for="(value, key) in gameStore.availablePowers" :key="key" :disabled="value === 0"
-                class="text-xl md:text-4xl justify-center scale-in-center flex flex-col">
+            <u-button v-for="(value, key) in gameStore.availablePowers" @click="powers[key].click()" :key="key"
+                :disabled="value === 0" class="text-xl md:text-4xl justify-center scale-in-center flex flex-col">
                 <span class="flex gap-4 items-center">
 
                     <icon :name="powers[key].icon"></icon> {{ powers[key].display }}

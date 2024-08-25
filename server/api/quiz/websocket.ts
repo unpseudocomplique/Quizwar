@@ -28,6 +28,9 @@ const events = {
     startgame: (peer, data: { room: string, type: 'startgame' }) => {
         peer.publish(data.room, data)
     },
+    powerUsed: (peer, data: { room: string, type: 'powerUsed', player: { id: string, username: string }, power: { power: string, questionId: string, gameId: string, originPlayerId: string } }) => {
+        peer.publish(data.room, data)
+    },
     close: (peer, data: { room: string }) => {
         peer.publish(data.room, "Another user left");
         peer.unsubscribe(data.room)

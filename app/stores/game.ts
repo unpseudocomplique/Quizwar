@@ -7,11 +7,13 @@ export enum PowerType {
 export const useGameStore = defineStore('game', {
     state: () => {
 
+        const game = ref(null)
         const players = ref([])
         const currentQuestionIndex = ref(0)
         const usedPowers = ref([])
 
         return {
+            game,
             players,
             currentQuestionIndex,
             usedPowers

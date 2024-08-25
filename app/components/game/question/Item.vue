@@ -15,6 +15,8 @@ const showResult = ref(false)
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
+
+
 const onThemeFinished = async () => {
     await sleep(3000)
         showQuestion.value = true

@@ -34,6 +34,9 @@ watch(() => data.value, (newValue) => {
     if (parsed.type === "join") {
         gameStore.addPlayer(parsed.player)
     }
+    if (parsed.type === "powerUsed") {
+        gameStore.usedPowers.push(parsed.power)
+    }
 }, { deep: true })
 
 
@@ -42,6 +45,7 @@ const requestPowers = useFetch(`/api/game/${gameId}/usedPower`)
 const requestScore = useFetch(`/api/game/${gameId}/score`)
 
 const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
+gameStore.game = game.value
 
 const { data: powers } = await requestPowers
 const { data: gameAnswers } = await requestScore
