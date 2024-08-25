@@ -134,6 +134,28 @@ const shareGame = async () => {
     })
 }
 
+const particlesOptions = {
+    fullScreen: {
+        enable: false,
+    },
+    fpsLimit: 120,
+    background: {
+        color: {
+            value: 'transparent'
+        }
+    },
+    particles: {
+        number: {
+            value: 80
+        },
+        size: {
+            value: { min: 1, max: 5 }
+        }
+    },
+    preset: 'stars',
+    detectRetina: true
+}
+
 </script>
 
 <template>
@@ -160,61 +182,8 @@ const shareGame = async () => {
 
             </UDashboardPanelContent>
             <UDashboardPanelContent v-else-if="!isGameOver">
-                <client-only>
-                    <vue-particles id="tsparticles" :options="{
-                        fpsLimit: 120,
-                        interactivity: {
-                            events: {
-                                onHover: {
-                                    enable: true,
-                                    mode: 'repulse'
-                                },
-                            },
-                            modes: {
-                                bubble: {
-                                    distance: 400,
-                                    duration: 2,
-                                    opacity: 0.8,
-                                    size: 40
-                                },
-                                push: {
-                                    quantity: 4
-                                },
-                                repulse: {
-                                    distance: 200,
-                                    duration: 0.4
-                                }
-                            }
-                        },
-                        particles: {
-                            move: {
-                                direction: 'none',
-                                enable: true,
-                                outModes: 'bounce',
-                                random: false,
-                                speed: 3,
-                                straight: false
-                            },
-                            number: {
-                                density: {
-                                    enable: true,
-                                },
-                                value: 80
-                            },
-                            opacity: {
-                                value: 0.1
-                            },
-                            shape: {
-                                type: 'circle'
-                            },
-                            size: {
-                                value: { min: 1, max: 5 }
-                            }
-                        },
-                        detectRetina: true
-                    }" />
-                </client-only>
-
+                <vue-particles id="tsparticles" class="absolute top-0 left-0 w-full h-full"
+                    :options="particlesOptions" />
                 <u-card class="h-full flex flex-col" v-if="!showScore"
                     :ui="{ body: { base: 'h-full flex' }, padding: 'px-4 py-5 sm:p-6' }">
                     <template #header>
