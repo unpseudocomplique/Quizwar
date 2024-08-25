@@ -43,7 +43,10 @@ const uploadFile = async () => {
 <template>
     <li
         class="flex gap-4 justify-between items-center flex-wrap border border-gray-200 dark:border-gray-700 p-2 rounded-md">
-        <p>{{ question.question.display }}</p>
+        <div class="flex flex-col gap-2">
+            <p>{{ question.question.display }}</p>
+            <p class="text-gray-500 dark:text-gray-400">{{ question.question.promptPicture }}</p>
+        </div>
         <transition name="scale-in-center" mode="out-in">
 
             <nuxt-img @click="uploadFile" v-if="question.question.picture" class="h-48"

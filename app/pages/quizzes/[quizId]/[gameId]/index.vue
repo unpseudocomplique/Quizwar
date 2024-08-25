@@ -39,13 +39,20 @@ watch(() => data.value, (newValue) => {
 const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
 
 const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
+const { data: gameAnswers } = await useFetch(`/api/game/${gameId}/score`)
+
+gameAnswers.value.scores.forEach(score => {
+    score.answers.forEach(answer => {
+        gameStore.addAnswser(answer, score.player)
+    })
+})
 
 const { text, copy, copied, isSupported } = useClipboard({ source: game.value.display })
 
 
 onMounted(() => {
     const isDev = window.location.href.includes('localhost')
-    if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 4)
+    // if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 4)
 })
 
 watch(text, () => {
@@ -54,14 +61,13 @@ watch(text, () => {
     toast.add({ title: 'Copied game code', icon: 'i-heroicons-clipboard-check', color: 'green' })
 })
 const currentQuestion = ref(null)
-const currentQuestionIndex = ref(0)
 const isGameOver = ref(false)
 const isGameStarted = ref(false)
 const showScore = ref(false)
 
-const isLastQuestion = computed(() => currentQuestionIndex.value === game.value.quiz.questions.length - 1)
+const isLastQuestion = computed(() => gameStore.currentQuestionIndex === game.value.quiz.questions.length - 1)
 
-currentQuestion.value = game.value.quiz.questions[currentQuestionIndex.value].question
+currentQuestion.value = game.value.quiz.questions[gameStore.currentQuestionIndex].question
 const getAnswer = async (question, answers) => {
     const questionIndex = game.value.quiz.questions.findIndex(item => item.questionId === question.id)
     if (questionIndex === -1) return;
@@ -82,7 +88,7 @@ const getAnswer = async (question, answers) => {
         console.log(e)
     }
 
-    if (!isLastQuestion.value && currentQuestionIndex.value % 5 === 0) {
+    if (!isLastQuestion.value && gameStore.currentQuestionIndex % 5 === 0) {
         showScore.value = true
         await sleep(5000)
         showScore.value = false
@@ -97,9 +103,9 @@ const nextQuestion = () => {
         return;
     }
 
-    currentQuestionIndex.value = currentQuestionIndex.value + 1
+    gameStore.currentQuestionIndex = gameStore.currentQuestionIndex + 1
 
-    currentQuestion.value = game.value.quiz.questions[currentQuestionIndex.value].question
+    currentQuestion.value = game.value.quiz.questions[gameStore.currentQuestionIndex].question
 }
 
 const startGame = async () => {
@@ -144,7 +150,7 @@ const shareGame = async () => {
                 <u-card class="h-full flex flex-col" v-if="!showScore"
                     :ui="{ body: { base: 'h-full flex' }, padding: 'px-4 py-5 sm:p-6' }">
                     <template #header>
-                        <p>Question : {{ currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
+                        <p>Question : {{ gameStore.currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
 
                     </template>
                     <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
@@ -154,7 +160,7 @@ const shareGame = async () => {
                 <u-card v-else class="h-full flex flex-col"
                     :ui="{ body: { base: 'h-full flex' }, padding: 'px-4 py-5 sm:p-6' }">
                     <template #header>
-                        <p>Comment se déroule la partie a la question : {{ currentQuestionIndex + 1 }} ?</p>
+                        <p>Comment se déroule la partie a la question : {{ gameStore.currentQuestionIndex + 1 }} ?</p>
 
                     </template>
                     <game-score-table />

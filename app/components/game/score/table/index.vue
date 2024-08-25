@@ -3,11 +3,42 @@ import { timeline, stagger } from "motion"
 const gameStore = useGameStore()
 const listItems = ref()
 
+
+// scorePerPlayer(store) {
+//             console.log(store.players)
+//             return store.players.reduce((acc, player) => {
+//                 const { answers } = player
+//                 const score = answers.reduce((acc, answer) => {
+//                     if (answer.isCorrect) {
+//                         acc.correct += 1
+//                     } else {
+//                         acc.wrong += 1
+//                     }
+//                     return acc
+//                 }, { correct: 0, wrong: 0 })
+//                 acc.push({
+//                     player: player.player,
+//                     score
+//                 })
+//                 return acc
+//             }, [])
+//         }
+
 const score = computed(() => {
-    const table = gameStore.scorePerPlayer.map(player => {
+    const table = gameStore.players.map(player => {
+        const score = player.answers.reduce((acc, answer, index) => {
+            if (index > gameStore.currentQuestionIndex) {
+                return acc
+            }
+            if (answer.isCorrect) {
+                acc += 1
+            }
+            return acc
+        }, 0)
+
         return {
-            username: player.player.username,
-            score: player.score.correct
+            player: player.player,
+            score
         }
     })
     table.sort((a, b) => b.score - a.score)
