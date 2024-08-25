@@ -16,6 +16,7 @@ const stateCreatePlayer = ref({
 })
 
 const isUserNameChoosed = ref(false)
+const route = useRoute()
 
 const createPLayer = async (event: FormSubmitEvent<TSchemaCreatePlayer>) => {
 
@@ -25,13 +26,12 @@ const createPLayer = async (event: FormSubmitEvent<TSchemaCreatePlayer>) => {
     })
 
     const router = useRouter()
-    const route = useRoute()
 
-    const url = route.query.redirect as string | undefined
+    const url = useCookie('redirect')
 
-    if (url) {
+    if (url.value) {
         await fetch()
-        await router.replace(url)
+        await router.replace(url.value)
 
     } else {
 
@@ -52,8 +52,9 @@ const createPLayer = async (event: FormSubmitEvent<TSchemaCreatePlayer>) => {
 
             <UDashboardPanelContent>
                 <div class="flex flex-col items-center justify-center gap-4 h-full">
-                    <u-button to="/api/auth/google" icon="i-logos-google-icon" label="Login with GitHub" color="black"
-                        external>Login with Google</u-button>
+                    <u-button :to="{ path: '/api/auth/google' }" icon="i-logos-google-icon" label="Login with GitHub"
+                        color="black" external>Login with
+                        Google</u-button>
                     <!-- <u-card class="w-[600px] max-w-full">
                         <UForm :schema="schemaCreatePlayer" :state="stateCreatePlayer" class="space-y-4"
                             @submit="createPLayer">

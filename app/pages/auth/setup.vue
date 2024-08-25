@@ -18,8 +18,15 @@ const updatePlayer = async () => {
         }
     })
 
+    const redirect = useCookie('redirect')
+    const newUrl = redirect.value
+    redirect.value = undefined
+
+
 
     stateCreatePlayer.value.updating = false
+    const router = useRouter()
+    await router.push(newUrl ? newUrl : '/quizzes')
 }
 
 </script>

@@ -75,8 +75,8 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
 
         <UDivider />
 
-        <UDashboardSidebarLinks :links="[{ label: 'Colors', draggable: true, children: colors }]"
-          @update:links="colors => defaultColors = colors" />
+        <!-- <UDashboardSidebarLinks :links="[{ label: 'Colors', draggable: true, children: colors }]"
+          @update:links="colors => defaultColors = colors" /> -->
 
         <div class="flex-1" />
 
@@ -85,7 +85,11 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
         <UDivider class="sticky bottom-0" />
 
         <template #footer>
-          <u-button @click="logout" variant="ghost">Logout</u-button>
+          <div class="flex flex-col gap-10">
+
+            <nuxt-img src="/logo.webp" class="w-36 h-36" />
+            <u-button @click="logout" v-if="user" variant="ghost">Logout</u-button>
+          </div>
         </template>
       </UDashboardSidebar>
     </UDashboardPanel>

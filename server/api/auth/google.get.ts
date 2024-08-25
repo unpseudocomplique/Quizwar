@@ -4,6 +4,9 @@ export default oauthGoogleEventHandler({
     },
     async onSuccess(event, { user, tokens }) {
         console.log('GitHub OAuth success:', user)
+        const query = getQuery(event)
+        const newUrl = parseCookies(event).redirect
+
         const foundUser = await prisma.player.findUnique({
             where: {
                 email: user.email
@@ -27,7 +30,8 @@ export default oauthGoogleEventHandler({
         await setUserSession(event, {
             user: player
         })
-        return sendRedirect(event, foundUser ? '/quizzes' : '/auth/setup')
+
+        return sendRedirect(event, foundUser ? newUrl ? newUrl : '/quizzes' : '/auth/setup')
     },
     // Optional, will return a json error and 401 status code by default
     onError(event, error) {

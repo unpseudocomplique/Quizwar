@@ -7,7 +7,9 @@ const route = useRoute()
 if (route.path !== '/auth/login' && !user.value) {
   await fetch()
   const router = useRouter()
-  await router.push(`/auth/login?redirect=${route.path}`)
+  const redirect = useCookie('redirect')
+  redirect.value = route.path
+  await router.push(`/auth/login`)
 }
 
 useHead({
@@ -20,21 +22,20 @@ useHead({
     { rel: 'icon', href: '/favicon.ico' }
   ],
   htmlAttrs: {
-    lang: 'en'
+    lang: 'fr'
   }
 })
 
-const title = 'Game'
-const description = 'Nuxt UI Pro is a collection of premium Vue components built on top of Nuxt UI to create beautiful & responsive Nuxt applications in minutes.'
+const title = 'Quizwar'
+const description = 'Défie tes amis et tes proches avec ce jeu de quiz en ligne rempli de rebondissements.'
 
 useSeoMeta({
   title,
   description,
   ogTitle: title,
   ogDescription: description,
-  ogImage: 'https://dashboard-template.nuxt.dev/social-card.png',
-  twitterImage: 'https://dashboard-template.nuxt.dev/social-card.png',
-  twitterCard: 'summary_large_image'
+  ogImage: '/logo.webp',
+  twitterImage: '/logo.webp'
 })
 </script>
 
