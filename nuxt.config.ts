@@ -56,7 +56,8 @@ export default defineNuxtConfig({
     minioUser: undefined,
     minioPassword: undefined,
     public: {
-      domain: 'localhost:3000'
+      domain: 'localhost:3000',
+      websocket: 'ws://localhost:3000'
     }
   },
   compatibilityDate: '2024-07-11',
