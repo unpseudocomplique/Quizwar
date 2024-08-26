@@ -62,6 +62,9 @@ async function onSubmitCreateRoom(event: FormSubmitEvent<TSchemaCreateRoom>) {
 
                     </u-card>
                 </div>
+                <u-button :to="`/quizzes/${quizId}/leaderboard`" class="ml-auto" :loading="stateCreateRoom.creating">
+                                Learderboard
+                            </u-button>
             </UDashboardPanelContent>
         </UDashboardPanel>
     </UDashboardPage>
