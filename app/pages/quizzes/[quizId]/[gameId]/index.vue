@@ -7,7 +7,8 @@ const { share } = useShare()
 
 
 const runtimeConfig = useRuntimeConfig()
-const { status, data, send, open, close, } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
+const isDev = window.location.href.includes('localhost')
+const { status, data, send, open, close, } = useWebSocket(`${isDev ? 'ws': 'wss'}://${runtimeConfig.public.domain}/api/quiz/websocket`)
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
 provide('sendGameInformation', (message: string) => send(message))
