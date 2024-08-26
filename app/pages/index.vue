@@ -5,7 +5,7 @@ import { WebSocketMessage, actionTypeEnum } from '@/utils/websocket';
 const runtimeConfig = useRuntimeConfig()
 
 // In prod: check if secure, then use wss://
-const { status, data, send, open, close } = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/websocket`)
+const { status, data, send, open, close } = useWebSocket(`${runtimeConfig.public.websocket}/api/quiz/websocket`)
 // const websocket = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/1/websocket`)
 const history = ref<string[]>([])
 const message = ref('')
