@@ -116,7 +116,7 @@ const isOnePowerSelected = computed(() => {
                     :color="powers[key].selected ? 'green' : value === 0 ? 'gray' : isOnePowerSelected ? 'gray' : undefined">
                     <span class="flex gap-4 items-center">
 
-                        <icon :name="powers[key].icon"></icon> {{ powers[key].display }}
+                        <Icon :name="powers[key].icon"/> {{ powers[key].display }}
                     </span>
                     <span class="text-5xl">
                         <template v-if="value === 0 && !powers[key].selected">

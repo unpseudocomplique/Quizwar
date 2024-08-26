@@ -112,7 +112,8 @@ const shouldBeBlocked = computed(() => {
                 {{ question.display }}
             </p>
             <UProgress v-if="showAnswers" :value="output" />
-            <div v-if="showAnswers" class="grid grid-cols-2 gap-4 h-full">
+            <div v-if="showAnswers" class="grid grid-cols-2 gap-4 h-full relative">
+                <game-question-power-blocked v-if="shouldBeBlocked" />
                 <game-answer-button :disabled="shouldBeBlocked" @select-option="selectAnwser(answer)"
                     v-for="(answer, index) in answerToDisplay" :color="answer.selected ? 'green' : colors[index]"
                     :answer="answer" :key="answer.id"
