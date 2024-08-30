@@ -1,7 +1,11 @@
 export enum actionTypeEnum {
     JOIN = 'join',
     CLOSE = 'close',
-    MESSAGE = 'message'
+    MESSAGE = 'message',
+    ANSWER = 'answer',
+    START_GAME = 'startgame',
+    POWER_USED = 'powerUsed',
+    PLAYER_READY = 'playerReady'
 }
 
 export class WebSocketMessage {
@@ -16,13 +20,14 @@ export class WebSocketMessage {
      * @param {string} room Room to do the action
      * @param {any} data Message to send in the room
      */
-    constructor(type,room,message) {
+    constructor(type,room,message = '{}') {
         this.type = type;
         this.room = room;
         this.message = message;
     }
 
     toString() {
-        return JSON.stringify({ type: this.type, room: this.room, message: this.message })
+        const message = JSON.parse(this.message);
+        return JSON.stringify({ type: this.type, room: this.room, ...message })
     }
 }

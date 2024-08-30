@@ -11,12 +11,14 @@ export const useGameStore = defineStore('game', {
         const players = ref([])
         const currentQuestionIndex = ref(0)
         const usedPowers = ref([])
+        const playersReady = ref([])
 
         return {
             game,
             players,
             currentQuestionIndex,
-            usedPowers
+            usedPowers,
+            playersReady
         }
     },
     actions: {
@@ -46,6 +48,18 @@ export const useGameStore = defineStore('game', {
                 player,
                 answers: []
             })
+        },
+        addPlayerReady: function(player) {
+            const playerIndex = this.players.findIndex(item => player.id === item.player.id)
+            if (playerIndex !== -1) {
+                return
+            }
+            this.playersReady.push(
+                player
+            )
+        },
+        resetPlayersReady: function() {
+            this.playersReady = []
         }
     },
     getters: {
@@ -88,6 +102,9 @@ export const useGameStore = defineStore('game', {
         allOtherPlayers(store) {
             const { user } = useUserSession()
             return store.players.filter(player => player.player.id !== user.value.id)
+        },
+        playersReadyList(store){
+            return store.playersReady
         }
     }
 })

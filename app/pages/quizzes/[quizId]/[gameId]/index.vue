@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import { useShare } from '@vueuse/core'
+import { WebSocketMessage, actionTypeEnum } from '@/utils/websocket';
 
 const { share } = useShare()
 
@@ -19,23 +20,26 @@ const route = useRoute()
 const quizId = route.params.quizId
 
 const gameId = route.params.gameId as string
-send(JSON.stringify({ type: 'join', room: gameId, player: toRaw(user.value) }))
+send(new WebSocketMessage(actionTypeEnum.JOIN, gameId, JSON.stringify({player: toRaw(user.value)} ) ).toString())
 
 watch(() => data.value, (newValue) => {
     const parsed = JSON.parse(newValue)
-    if (parsed.type === 'startgame') {
+    if (parsed.type === actionTypeEnum.START_GAME) {
         isGameStarted.value = true
     }
 
-    if (parsed.type === "answer") {
+    if (parsed.type === actionTypeEnum.ANSWER) {
         gameStore.addAnswser(parsed.answer, parsed.player)
     }
 
-    if (parsed.type === "join") {
+    if (parsed.type === actionTypeEnum.JOIN) {
         gameStore.addPlayer(parsed.player)
     }
-    if (parsed.type === "powerUsed") {
+    if (parsed.type === actionTypeEnum.POWER_USED) {
         gameStore.usedPowers.push(parsed.power)
+    }
+    if(parsed.type === actionTypeEnum.PLAYER_READY) {
+        managePlayersReady(parsed.player);
     }
 }, { deep: true })
 
@@ -77,6 +81,7 @@ const currentQuestion = ref(null)
 const isGameOver = ref(false)
 const isGameStarted = ref(false)
 const showScore = ref(false)
+const awaitUsers = ref(false);
 
 const isLastQuestion = computed(() => gameStore.currentQuestionIndex === game.value.quiz.questions.length - 1)
 
@@ -94,7 +99,7 @@ const getAnswer = async (question, answers) => {
             method: 'POST',
             body: { questionId: question.id, gameId: gameId, answerIds: answers.map(answer => answer.id) }
         })
-        send(JSON.stringify({ type: 'answer', room: gameId, player: user.value, answer: answer }))
+        send(new WebSocketMessage(actionTypeEnum.ANSWER, gameId, JSON.stringify({player: user.value, answer: answer}) ).toString())
 
         gameStore.addAnswser(answer, user.value)
     } catch (e) {
@@ -106,7 +111,37 @@ const getAnswer = async (question, answers) => {
         await sleep(5000)
         showScore.value = false
     }
-    nextQuestion()
+    
+    awaitUsers.value = true;
+    await sendReady()
+}
+
+const sendReady = async () => {
+    console.log('send ready', user.value.username)
+    send(new WebSocketMessage(actionTypeEnum.PLAYER_READY, gameId, JSON.stringify({player:user.value.username}) ).toString())
+    console.log('after send')
+    managePlayersReady(user.value.username)
+}
+
+const managePlayersReady = (player:string) => {
+    gameStore.addPlayerReady(player);
+
+    verifyAllPlayersReady();
+}
+
+const verifyAllPlayersReady = () => {
+    const allPlayerReady = ref(false);
+
+    // Ajouter ici la logique
+    if(gameStore.allOtherPlayers.length+1 == gameStore.playersReadyList.length)
+        allPlayerReady.value = true;
+
+    if(allPlayerReady.value === true){
+        console.log('passe ici ?')
+        awaitUsers.value = false;
+        gameStore.resetPlayersReady();
+        nextQuestion();
+    }
 }
 
 const nextQuestion = () => {
@@ -122,7 +157,7 @@ const nextQuestion = () => {
 }
 
 const startGame = async () => {
-    send(JSON.stringify({ type: 'startgame', room: gameId }))
+    send(new WebSocketMessage(actionTypeEnum.START_GAME,gameId).toString())
     isGameStarted.value = true
 }
 
@@ -190,8 +225,9 @@ const particlesOptions = {
                         <p>Question : {{ gameStore.currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
 
                     </template>
-                    <game-question-item v-if="currentQuestion" v-model="currentQuestion" :key="currentQuestion.id"
+                    <game-question-item v-if="currentQuestion && !awaitUsers" v-model="currentQuestion" :key="currentQuestion.id"
                         @answer="getAnswer(currentQuestion, $event)"></game-question-item>
+                    <game-player-ready v-if="awaitUsers" />
 
                 </u-card>
                 <u-card v-else class="h-full flex flex-col"

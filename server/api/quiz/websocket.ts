@@ -9,9 +9,7 @@ export default defineWebSocketHandler({
     },
     message(peer, message) {
         console.log('message on WS', message);
-
         const data = JSON.parse(message.text())
-
         events[data.type]?.(peer, data)
 
     }
@@ -34,5 +32,8 @@ const events = {
     close: (peer, data: { room: string }) => {
         peer.publish(data.room, "Another user left");
         peer.unsubscribe(data.room)
-    }
+    },
+    playerReady: (peer, data: { room: string, type: 'playerReady', player: string }) => {
+        peer.publish(data.room, data);
+    },
 }
