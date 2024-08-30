@@ -87,7 +87,17 @@ const powers = ref({
         display: 'Double points',
         description: 'Doublez les points obtenus à cette question.',
         icon: 'i-noto-money-mouth-face',
-        selected: false
+        selected: false,
+        click: async () => {
+            const power = await $fetch(`/api/game/${gameStore.game.id}/question/${question.value.id}/usePower`, {
+                method: 'POST',
+                body: { power: PowerType.DOUBLE_POINTS }
+            })
+
+            gameStore.usedPowers.push(power)
+            sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+            powers.value[PowerType.DOUBLE_POINTS].selected = true
+        },
     }
 })
 
