@@ -10,6 +10,14 @@ export default defineEventHandler(async (event) => {
         return { error: 'All fields (playerId, questionId, gameId, answerIds) are required and answerIds must be an array' };
     }
 
+    const usedPower = prisma.usedPower.findMany({
+        where: {
+            questionId: questionId,
+            gameId: gameId,
+            targetPlayerId: playerId
+        }
+    })
+
     // Vérifiez si toutes les réponses sont correctes
     const answers = await prisma.answer.findMany({
         where: {
@@ -34,20 +42,45 @@ export default defineEventHandler(async (event) => {
         },
     });
 
+    const powers = await usedPower
+
     if(isCorrect) {
-        const playerGame = await prisma.playerGame.update({
-            where: {
-                playerId_gameId: {
-                    gameId: gameId,
-                    playerId: playerId
+        const shouldMultiply = powers.some(power => power.power === PowerType.DOUBLE_POINTS)
+        let toAdd = 1
+        if(shouldMultiply) {
+            toAdd = toAdd * 2
+        }
+        const shouldSteal = powers.find(power => power.power === PowerType.STEAL_POINTS)
+
+        if(shouldSteal){
+            await prisma.playerGame.update({
+                where: {
+                    playerId_gameId: {
+                        gameId: gameId,
+                        playerId: shouldSteal.originPlayerId
+                    }
+                },
+                data: {
+                    gameScore: {
+                        increment: toAdd
+                    }
                 }
-            },
-            data: {
-                gameScore: {
-                    increment: 1
+            })
+        }else {
+            await prisma.playerGame.update({
+                where: {
+                    playerId_gameId: {
+                        gameId: gameId,
+                        playerId: playerId
+                    }
+                },
+                data: {
+                    gameScore: {
+                        increment: toAdd
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     return playerAnswer
