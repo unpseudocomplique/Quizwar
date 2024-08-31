@@ -123,6 +123,8 @@ model PlayerGame {
   playerId   String
   gameId     String
   isFinished Boolean @default(false)
+  gameScore  Decimal @default(0)
+  
   player     Player  @relation(fields: [playerId], references: [id])
   game       Game    @relation(fields: [gameId], references: [id])
 
