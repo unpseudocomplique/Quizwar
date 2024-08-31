@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-const { data: gameScore } = useFetch(`/api/game/fakeId/score`, { immediate: false })
+const { data: gameScore } = await useFetch(`/api/game/fakeGame/fakePlayer/answsers`, { immediate: false })
 
 const props = defineProps<{
-    answer: typeof gameScore.value['scores'][0]['answers'][0]
+    answer: typeof gameScore.value[0]
     display: string
 }>()
 

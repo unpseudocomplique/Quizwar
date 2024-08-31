@@ -58,11 +58,11 @@ powers.value.forEach(power => {
     gameStore.usedPowers.push(power)
 })
 
-gameAnswers.value.scores.forEach(score => {
-    score.answers.forEach(answer => {
-        gameStore.addAnswser(answer, score.player)
-    })
-})
+// gameAnswers.value.scores.forEach(score => {
+//     score.answers.forEach(answer => {
+//         gameStore.addAnswser(answer, score.player)
+//     })
+// })
 
 const { text, copy, copied, isSupported } = useClipboard({ source: game.value.display })
 
