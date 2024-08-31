@@ -27,11 +27,11 @@ onMounted(() => {
                 <icon v-if="index === 0" class="absolute left-4 top-1/2 -translate-y-1/2 text-2xl"
                     name="i-emojione-crown" />
                 <p class="ml-8">
-                    {{ player.username }} :
+                    {{ player.player.username }} :
 
                 </p>
                 <p class="text-2xl">
-                    {{ player.score }}
+                    {{ player.gameScore }}
                 </p>
             </div>
         </div>
