@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { timeline, stagger } from "motion"
+
+const listItems = ref()
 
 const props = defineProps<{
     gameId: string
@@ -10,7 +13,16 @@ onMounted(async () => {
     $fetch(`/api/game/${props.gameId}/${user.value.id}/endPlayerGame`, { method: 'PATCH' })
 })
 
-const { data: gameScore } = await useFetch(`/api/game/${props.gameId}/score`)
+const { data: gameScore } = await useFetch(`/api/game/${props.gameId}/score`, {
+    transform: (data) => {
+        return data.map((item, index) => {
+            return {
+                ...item,
+                winner: index === 0
+            }
+        })
+    }
+})
 
 const { isPending, start, stop } = useTimeoutFn(async () => {
     const isGameOver = await $fetch(`/api/game/${props.gameId}/closeGame`, { method: 'PATCH' })
@@ -20,6 +32,15 @@ const { isPending, start, stop } = useTimeoutFn(async () => {
     }
 }, 1500)
 
+
+onMounted(() => {
+    const sequence = [
+        [listItems.value, { opacity: [0, 1], scale: [0.8, 1] }, { duration: 0.3, delay: stagger(0.1) }]
+    ]
+    timeline(sequence, {})
+
+})
+
 </script>
 
 <template>
@@ -27,11 +48,14 @@ const { isPending, start, stop } = useTimeoutFn(async () => {
 
         <UAccordion :items="gameScore" multiple>
             <template #default="{ item }">
-                <div
-                    class="flex justify-between items-center gap-4 bg-primary-100 dark:bg-primary-900/50 py-2 px-4 rounded-md cursor-pointer">
-                    <p class="text-2xl font-bold uppercase select-none">
-                        {{ item.player.username }}
+                <div ref="listItems"
+                    class="flex justify-between items-center flex-wrap gap-4 py-2 px-4 rounded-md cursor-pointer"
+                    :class="[item.winner ? 'bg-green-100 dark:bg-green-700/70' : 'bg-gray-100 dark:bg-gray-800/50']">
+                    <p class="text-xl font-bold uppercase select-none w-72 max-w-full line-clamp-1">
+                        <icon v-if="item.winner" class="text-2xl translate-y-1" name="i-emojione-crown" /> {{
+                        item.player.username }}
                     </p>
+
                     <u-badge variant="soft" class="select-none">Voir le détail</u-badge>
                     <p class="text-4xl">Score : {{ item.gameScore }}</p>
                 </div>
@@ -41,13 +65,5 @@ const { isPending, start, stop } = useTimeoutFn(async () => {
                 <game-score-list v-if="open" :game-id="gameId" :player-id="item.player.id" />
             </template>
         </UAccordion>
-        <!-- <u-card v-for="score in gameScore.scores" :key="score.player.id"
-            class="flex flex-col items-center justify-center gap-4 h-full">
-            <p class="text-2xl">Score : {{ score.score }}</p>
-            <p class="text-4xl font-bold uppercase">
-                {{ score.player.username }}
-            </p>
-            <game-score-question v-for="answer in score.answers" :key="answer.id" :answer="answer" />
-        </u-card> -->
     </div>
 </template>

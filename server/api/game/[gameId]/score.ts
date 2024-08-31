@@ -23,6 +23,9 @@ export default defineEventHandler(async (event) => {
                     }
                 }
             }
+        },
+        orderBy: {
+            gameScore: 'desc'
         }
     })
  
