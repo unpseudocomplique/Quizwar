@@ -15,6 +15,7 @@ const questionRef = ref()
 const showAnswers = ref(false)
 const output = ref(0)
 const showResult = ref(false)
+const showStealPoints = ref(false)
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -30,8 +31,6 @@ const onThemeFinished = async () => {
         ]
         const controles = timeline(sequence, {})
 
-        console.log('new question : ', question.value)
-
     controles.finished.then(async () => {
             await sleep(question.value.questionDuration * 1000)
             showAnswers.value = true
@@ -45,6 +44,14 @@ const onThemeFinished = async () => {
             showResult.value = true
 
             await sleep(200)
+
+            const hasBeenStealed = gameStore.usedPowers.some(power => power.power === PowerType.STEAL_POINTS && power.targetPlayerId === user.value.id && power.questionId === question.value.id)
+            if(hasBeenStealed) {
+                showStealPoints.value = true
+                await sleep(3500)
+                showStealPoints.value = false
+            } 
+            console.log(hasBeenStealed)
 
             emits('answer', question.value.answers.filter(item => item.selected))
 
@@ -113,7 +120,8 @@ const shouldBeBlocked = computed(() => {
             </p>
             <UProgress v-if="showAnswers" :value="output" />
             <div v-if="showAnswers" class="grid grid-cols-2 gap-4 h-full relative">
-                <game-question-power-blocked v-if="shouldBeBlocked" />
+                <game-question-power-blocked message="Tu as été bloqué" v-if="shouldBeBlocked" />
+                <game-question-power-blocked message="Tes points ont été volés" v-if="showStealPoints" />
                 <game-answer-button :disabled="shouldBeBlocked" @select-option="selectAnwser(answer)"
                     v-for="(answer, index) in answerToDisplay" :color="answer.selected ? 'green' : colors[index]"
                     :answer="answer" :key="answer.id"

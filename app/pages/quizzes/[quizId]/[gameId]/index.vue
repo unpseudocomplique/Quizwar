@@ -117,9 +117,7 @@ const getAnswer = async (question, answers) => {
 }
 
 const sendReady = async () => {
-    console.log('send ready', user.value.username)
     send(new WebSocketMessage(actionTypeEnum.PLAYER_READY, gameId, JSON.stringify({player:user.value.username}) ).toString())
-    console.log('after send')
     managePlayersReady(user.value.username)
 }
 

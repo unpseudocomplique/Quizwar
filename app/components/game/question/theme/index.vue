@@ -15,6 +15,7 @@ const labelTheme = ref()
 const valueTheme = ref()
 const showPowers = ref(false)
 const showSelectPlayerToBlock = ref(false)
+const showSelectPlayerToStealPoints = ref(false)
 
 onMounted(async () => {
 
@@ -50,6 +51,18 @@ const blockPlayer = async (player) => {
     sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
 }
 
+const stealPoints = async (player) => {
+    showSelectPlayerToStealPoints.value = false
+    powers.value[PowerType.STEAL_POINTS].selected = true
+    const power = await $fetch(`/api/game/${gameStore.game.id}/question/${question.value.id}/usePower`, {
+        method: 'POST',
+        body: { power: PowerType.STEAL_POINTS, targetPlayerId: player.id }
+    })
+
+    gameStore.usedPowers.push(power)
+    sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+}
+
 const powers = ref({
     [PowerType.FIFTY_FIFTY]: {
         display: '50/50',
@@ -72,7 +85,10 @@ const powers = ref({
         display: 'Vol de points',
         description: 'Choisissez votre cible et volez les points optenus a la fin de la question.',
         icon: 'i-noto-ninja',
-        selected: false
+        selected: false,
+        click: async () => {
+            showSelectPlayerToStealPoints.value = true
+        },
     },
     [PowerType.BLOCK]: {
         display: 'Bloquer',
@@ -119,6 +135,8 @@ const isOnePowerSelected = computed(() => {
         <template v-if="showPowers">
             <game-question-theme-select-player :players="gameStore.allOtherPlayers" v-if="showSelectPlayerToBlock"
                 @close="showSelectPlayerToBlock = false" @selected="blockPlayer" />
+            <game-question-theme-select-player :players="gameStore.allOtherPlayers" v-if="showSelectPlayerToStealPoints"
+                @close="showSelectPlayerToStealPoints = false" @selected="stealPoints" />
             <div v-else class="grid grid-cols-2 gap-4 h-full">
                 <u-button v-for="(value, key) in gameStore.availablePowers" @click="powers[key].click()" :key="key"
                     :disabled="value === 0 || isOnePowerSelected"

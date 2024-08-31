@@ -2,6 +2,10 @@
 import { } from 'vue'
 import { timeline, spring } from "motion"
 
+defineProps<{
+    message: string
+}>()
+
 const container = ref()
 const icon = ref()
 
@@ -24,7 +28,7 @@ onMounted(async () => {
     <div class="absolute transform-gpu top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-50">
 
         <div class="flex flex-col opacity-0 items-center shadow-lg justify-center gap-10 rounded-xl bg-white/50 backdrop-filter backdrop-blur-lg p-4 " ref="container">
-            <p class="text-5xl text-center">Tu as été bloqué</p>
+            <p class="text-5xl text-center">{{message}}</p>
             <span class="text-5xl" ref="icon">
                 <Icon name="i-noto-kiss-mark"/>
             </span>
