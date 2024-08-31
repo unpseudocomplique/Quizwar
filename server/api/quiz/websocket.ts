@@ -8,7 +8,6 @@ export default defineWebSocketHandler({
         console.log('error on WS', peer, error)
     },
     message(peer, message) {
-        console.log('message on WS', message);
         const data = JSON.parse(message.text())
         events[data.type]?.(peer, data)
 

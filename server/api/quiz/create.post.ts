@@ -155,7 +155,6 @@ const generateImagesForQuestions = async (questions) => {
             try {
 
                 const image = await openai.images.generate({ prompt: question.question.promptPicture });
-                console.log('image', image.data[0].url)
                 const imageFile = await fetch(image.data[0].url).then(res => res.blob())
                 const arrayBuffer = await imageFile.arrayBuffer()
                 const buffer = Buffer.from(arrayBuffer)

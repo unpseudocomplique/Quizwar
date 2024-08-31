@@ -3,7 +3,6 @@ export default oauthGoogleEventHandler({
 
     },
     async onSuccess(event, { user, tokens }) {
-        console.log('GitHub OAuth success:', user)
         const query = getQuery(event)
         const newUrl = parseCookies(event).redirect
 

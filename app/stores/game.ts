@@ -24,6 +24,7 @@ export const useGameStore = defineStore('game', {
     actions: {
         resetGame: function () {
             this.players = []
+            this.playersReady = []
             this.currentQuestionIndex = 0
             this.usedPowers = []
             this.game = null
@@ -64,7 +65,6 @@ export const useGameStore = defineStore('game', {
     },
     getters: {
         scorePerPlayer(store) {
-            console.log(store.players)
             return store.players.reduce((acc, player) => {
                 const { answers } = player
                 const score = answers.reduce((acc, answer) => {

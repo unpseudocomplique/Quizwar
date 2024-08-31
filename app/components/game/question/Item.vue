@@ -50,8 +50,7 @@ const onThemeFinished = async () => {
                 showStealPoints.value = true
                 await sleep(3500)
                 showStealPoints.value = false
-            } 
-            console.log(hasBeenStealed)
+            }
 
             emits('answer', question.value.answers.filter(item => item.selected))
 

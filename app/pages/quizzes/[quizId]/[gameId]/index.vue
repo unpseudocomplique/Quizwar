@@ -13,6 +13,10 @@ const { loggedIn, user, session, fetch, clear } = useUserSession()
 
 provide('sendGameInformation', (message: string) => send(message))
 
+onMounted(() => {
+    $fetch(`/api/game/${gameId}/addPlayer`, { method: 'POST' })
+})
+
 const gameStore = useGameStore()
 gameStore.resetGame()
 
@@ -49,6 +53,9 @@ const requestPowers = useFetch(`/api/game/${gameId}/usedPower`)
 const requestScore = useFetch(`/api/game/${gameId}/score`)
 
 const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
+
+game.value.quiz.questions = game.value.quiz.questions.slice(0, 5)
+
 gameStore.game = game.value
 
 const { data: powers } = await requestPowers
@@ -134,8 +141,7 @@ const verifyAllPlayersReady = () => {
     if(gameStore.allOtherPlayers.length+1 == gameStore.playersReadyList.length)
         allPlayerReady.value = true;
 
-    if(allPlayerReady.value === true){
-        console.log('passe ici ?')
+    if (allPlayerReady.value === true) {
         awaitUsers.value = false;
         gameStore.resetPlayersReady();
         nextQuestion();

@@ -33,14 +33,11 @@ const onSubmitJoin = async (event: FormSubmitEvent<TSchemaJoinRoom>) => {
   // Do something with data
   stateJoinRoom.value.joining = true
 
-  console.log('event', event.data.room)
   try {
     const response = await $fetch(`/api/game/join/${event.data.room}`, {
       method: 'PATCH',
       body: stateJoinRoom.value
     })
-
-    console.log(response)
 
     if (response.gameId) {
       const { gameId, quizId } = response
