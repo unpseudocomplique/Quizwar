@@ -18,12 +18,10 @@ export default defineEventHandler(async (event) => {
             isDeleted: false
         },
     });
-
+    
     const allCorrectAnswers = answers.filter((answer) => answer.isCorrect);
 
     const isCorrect = allCorrectAnswers.length === answerIds.length && allCorrectAnswers.every((answer) => answerIds.includes(answer.id));
-
-
 
     // Créez l'enregistrement de la réponse du joueur
     const playerAnswer = await prisma.playerAnswer.create({
@@ -35,6 +33,22 @@ export default defineEventHandler(async (event) => {
             isCorrect,
         },
     });
+
+    if(isCorrect) {
+        const playerGame = await prisma.playerGame.update({
+            where: {
+                playerId_gameId: {
+                    gameId: gameId,
+                    playerId: playerId
+                }
+            },
+            data: {
+                gameScore: {
+                    increment: 1
+                }
+            }
+        })
+    }
 
     return playerAnswer
 });
