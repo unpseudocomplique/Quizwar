@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import { useShare } from '@vueuse/core'
-import { WebSocketMessage, actionTypeEnum } from '@/utils/websocket';
 
 const { share } = useShare()
 
@@ -11,7 +10,7 @@ const runtimeConfig = useRuntimeConfig()
 const { status, data, send, open, close, } = useWebSocket(`${runtimeConfig.public.websocket}/api/quiz/websocket`)
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
-provide('sendGameInformation', (message: string) => send(message))
+// provide('sendGameInformation', (message: string) => send(message))
 
 onMounted(() => {
     $fetch(`/api/game/${gameId}/addPlayer`, { method: 'POST' })
@@ -24,7 +23,11 @@ const route = useRoute()
 const quizId = route.params.quizId
 
 const gameId = route.params.gameId as string
-send(new WebSocketMessage(actionTypeEnum.JOIN, gameId, JSON.stringify({player: toRaw(user.value)} ) ).toString())
+
+const GameRoom = new Room(send, gameId)
+
+provide('GameRoom', GameRoom)
+GameRoom.join()
 
 watch(() => data.value, (newValue) => {
     const parsed = JSON.parse(newValue)
@@ -106,7 +109,7 @@ const getAnswer = async (question, answers) => {
             method: 'POST',
             body: { questionId: question.id, gameId: gameId, answerIds: answers.map(answer => answer.id) }
         })
-        send(new WebSocketMessage(actionTypeEnum.ANSWER, gameId, JSON.stringify({player: user.value, answer: answer}) ).toString())
+        GameRoom.sendAnswer(user.value, answer)
 
         gameStore.addAnswser(answer, user.value)
     } catch (e) {
@@ -124,7 +127,7 @@ const getAnswer = async (question, answers) => {
 }
 
 const sendReady = async () => {
-    send(new WebSocketMessage(actionTypeEnum.PLAYER_READY, gameId, JSON.stringify({player:user.value.username}) ).toString())
+    GameRoom.sendPlayerReady(user.value.username)
     managePlayersReady(user.value.username)
 }
 
@@ -161,7 +164,7 @@ const nextQuestion = () => {
 }
 
 const startGame = async () => {
-    send(new WebSocketMessage(actionTypeEnum.START_GAME,gameId).toString())
+    GameRoom.startGame()
     isGameStarted.value = true
 }
 

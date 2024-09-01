@@ -10,6 +10,7 @@ const { user } = useUserSession()
 const emits = defineEmits(['finished'])
 const sendGameInformation = inject('sendGameInformation') as (message: string) => void
 
+const GameRoom = inject('GameRoom') as InstanceType<typeof Room>
 const containerTheme = ref()
 const labelTheme = ref()
 const valueTheme = ref()
@@ -42,13 +43,19 @@ onMounted(async () => {
 const blockPlayer = async (player) => {
     showSelectPlayerToBlock.value = false
     powers.value[PowerType.BLOCK].selected = true
-    const power = await $fetch(`/api/game/${gameStore.game.id}/question/${question.value.id}/usePower`, {
+    const powerTemp = await $fetch(`/api/game/${gameStore.game.id}/question/${question.value.id}/usePower`, {
         method: 'POST',
-        body: { power: PowerType.BLOCK, targetPlayerId: player.id }
+        body: { power: PowerType.BLOCK, targetPlayerId: player.id },
+
     })
+    const power = {
+        ...powerTemp,
+        createdAt: new Date(powerTemp.createdAt)
+    }
 
     gameStore.usedPowers.push(power)
-    sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+    // sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+    GameRoom.usePower(power)
 }
 
 const stealPoints = async (player) => {
@@ -60,7 +67,8 @@ const stealPoints = async (player) => {
     })
 
     gameStore.usedPowers.push(power)
-    sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+    // sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+    GameRoom.usePower(power)
 }
 
 const powers = ref({
@@ -75,7 +83,7 @@ const powers = ref({
             })
 
             gameStore.usedPowers.push(power)
-            sendGameInformation(JSON.stringify({ type: 'powerUsed', room: gameStore.game.id, power }))
+            GameRoom.usePower(power)
             powers.value[PowerType.FIFTY_FIFTY].selected = true
         },
         selected: false

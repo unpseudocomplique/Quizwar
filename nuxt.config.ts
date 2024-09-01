@@ -50,6 +50,11 @@ export default defineNuxtConfig({
       }
     }
   },
+  imports: {
+    dirs: [      // ... or scan all modules within given directory
+      'types/**'
+    ]
+  },
 
   runtimeConfig: {
     bucketEndpoint: undefined,
