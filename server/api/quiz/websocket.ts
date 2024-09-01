@@ -28,8 +28,8 @@ const events = {
     powerUsed: (peer, data: { room: string, type: 'powerUsed', player: { id: string, username: string }, power: { power: string, questionId: string, gameId: string, originPlayerId: string } }) => {
         peer.publish(data.room, data)
     },
-    close: (peer, data: { room: string }) => {
-        peer.publish(data.room, "Another user left");
+    close: (peer, data: { room: string, playerId: string }) => {
+        peer.publish(data.room, { playerId: data.playerId });
         peer.unsubscribe(data.room)
     },
     playerReady: (peer, data: { room: string, type: 'playerReady', player: string }) => {

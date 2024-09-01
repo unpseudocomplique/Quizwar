@@ -9,7 +9,8 @@ export default defineEventHandler(async (event) => {
     const { questionId, gameId, answerIds } = body;
 
     if (!playerId || !questionId || !gameId || !answerIds || !Array.isArray(answerIds)) {
-        return { error: 'All fields (playerId, questionId, gameId, answerIds) are required and answerIds must be an array' };
+        // return { error: 'All fields (playerId, questionId, gameId, answerIds) are required and answerIds must be an array' };
+        setResponseStatus(event, 400, 'All fields (playerId, questionId, gameId, answerIds) are required and answerIds must be an array')
     }
 
     const usedPower = prisma.usedPower.findMany({

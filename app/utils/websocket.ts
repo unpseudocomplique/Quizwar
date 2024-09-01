@@ -1,3 +1,6 @@
+import type { TPostedPlayerAnswer } from '../../types/player';
+import type { TPostedPower } from '../../types/game';
+
 export enum actionTypeEnum {
     JOIN = 'join',
     CLOSE = 'close',
@@ -7,6 +10,7 @@ export enum actionTypeEnum {
     POWER_USED = 'powerUsed',
     PLAYER_READY = 'playerReady'
 }
+
 
 export class WebSocketMessage {
     type: actionTypeEnum;
@@ -30,4 +34,43 @@ export class WebSocketMessage {
         const message = JSON.parse(this.message);
         return JSON.stringify({ type: this.type, room: this.room, ...message })
     }
+}
+
+export class Room {
+    room: string
+    send: any
+    
+
+    constructor(send: any, room: string) {
+        this.send = send
+        this.room = room
+    }
+
+    join(user) {
+        this.send(getGameEventMessage(actionTypeEnum.JOIN, this.room, { player: user }))
+    }
+
+    startGame() {
+        this.send(getGameEventMessage(actionTypeEnum.START_GAME, this.room, undefined ))
+    }
+
+    sendAnswer(player: any, answer: TPostedPlayerAnswer) {
+        this.send(getGameEventMessage(actionTypeEnum.ANSWER, this.room,{ player: player, answer: answer }))
+    }
+
+    sendPlayerReady(playerId: string) {
+        this.send(getGameEventMessage(actionTypeEnum.PLAYER_READY, this.room, { player: playerId }))
+    }
+
+    usePower(power: TPostedPower) {
+        this.send(getGameEventMessage(actionTypeEnum.POWER_USED, this.room, { power: power }))
+    }
+
+    close(playerId: string) {
+        this.send(getGameEventMessage(actionTypeEnum.CLOSE, this.room, { playerId }))
+    }
+}
+
+export const getGameEventMessage = <T extends Record<string, V>, V>(type: actionTypeEnum, room: string, message: T | undefined) => {
+    return JSON.stringify({ type: type, room: room, ...(message ? message : {}) })
 }

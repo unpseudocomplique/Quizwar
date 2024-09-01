@@ -34,19 +34,14 @@ const onSubmitJoin = async (event: FormSubmitEvent<TSchemaJoinRoom>) => {
   stateJoinRoom.value.joining = true
 
   try {
-    const response = await $fetch(`/api/game/join/${event.data.room}`, {
-      method: 'PATCH',
-      body: stateJoinRoom.value
-    })
+    const game = await $fetch(`/api/game/gameDisplay/${event.data.room}/checkGame`)
 
-    if (response.gameId) {
-      const { gameId, quizId } = response
-      const router = useRouter()
-      await router.push(`/quizzes/${quizId}/${gameId}`)
-    }
+    const router = useRouter()
+    await router.push(`/quizzes/${game.quizId}/${game.id}`)
 
-  } catch (e) {
-    alert('alert error')
+  }catch(e) {
+    const toast = useToast()
+    toast.add({ title: 'Game not found', icon: 'i-heroicons-exclamation-circle', color: 'red' })
   }
   stateJoinRoom.value.joining = false
 }

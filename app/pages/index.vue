@@ -29,7 +29,16 @@ const SeedDB = async () => {
 
 const room = ref('');
 const connectToRoom = async () => {
-  send(new WebSocketMessage(actionTypeEnum.JOIN, room.value, '').toString())
+  try {
+    const game = await $fetch(`/api/game/gameDisplay/${room.value}/checkGame`)
+
+    const router = useRouter()
+    await router.push(`/quizzes/${game.quizId}/${game.id}`)
+
+  }catch(e) {
+    const toast = useToast()
+    toast.add({ title: 'Game not found', icon: 'i-heroicons-exclamation-circle', color: 'red' })
+  }
 }
 
 const sendMessage = async () => {

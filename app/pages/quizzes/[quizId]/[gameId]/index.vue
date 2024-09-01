@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import { useShare } from '@vueuse/core'
-import { WebSocketMessage, actionTypeEnum } from '@/utils/websocket';
 
 const { share } = useShare()
 
@@ -11,7 +10,7 @@ const runtimeConfig = useRuntimeConfig()
 const { status, data, send, open, close, } = useWebSocket(`${runtimeConfig.public.websocket}/api/quiz/websocket`)
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
-provide('sendGameInformation', (message: string) => send(message))
+// provide('sendGameInformation', (message: string) => send(message))
 
 onMounted(() => {
     $fetch(`/api/game/${gameId}/addPlayer`, { method: 'POST' })
@@ -24,7 +23,13 @@ const route = useRoute()
 const quizId = route.params.quizId
 
 const gameId = route.params.gameId as string
-send(new WebSocketMessage(actionTypeEnum.JOIN, gameId, JSON.stringify({player: toRaw(user.value)} ) ).toString())
+
+const GameRoom = new Room(send, gameId)
+
+provide('GameRoom', GameRoom)
+GameRoom.join(user.value)
+
+gameStore.addPlayer(user.value)
 
 watch(() => data.value, (newValue) => {
     const parsed = JSON.parse(newValue)
@@ -45,7 +50,15 @@ watch(() => data.value, (newValue) => {
     if(parsed.type === actionTypeEnum.PLAYER_READY) {
         managePlayersReady(parsed.player);
     }
+    if (parsed.type === actionTypeEnum.CLOSE) {
+        gameStore.players = gameStore.players.filter(player => player.player.id === parsed.playerId)
+    }
 }, { deep: true })
+
+
+onBeforeUnmount(() => {
+    GameRoom.close(user.value.id)
+})
 
 
 const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
@@ -76,7 +89,7 @@ const { text, copy, copied, isSupported } = useClipboard({ source: game.value.di
 
 onMounted(() => {
     const isDev = window.location.href.includes('localhost')
-    // if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 4)
+    if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
 })
 
 watch(text, () => {
@@ -106,7 +119,7 @@ const getAnswer = async (question, answers) => {
             method: 'POST',
             body: { questionId: question.id, gameId: gameId, answerIds: answers.map(answer => answer.id) }
         })
-        send(new WebSocketMessage(actionTypeEnum.ANSWER, gameId, JSON.stringify({player: user.value, answer: answer}) ).toString())
+        GameRoom.sendAnswer(user.value, answer)
 
         gameStore.addAnswser(answer, user.value)
     } catch (e) {
@@ -124,7 +137,7 @@ const getAnswer = async (question, answers) => {
 }
 
 const sendReady = async () => {
-    send(new WebSocketMessage(actionTypeEnum.PLAYER_READY, gameId, JSON.stringify({player:user.value.username}) ).toString())
+    GameRoom.sendPlayerReady(user.value.username)
     managePlayersReady(user.value.username)
 }
 
@@ -161,7 +174,7 @@ const nextQuestion = () => {
 }
 
 const startGame = async () => {
-    send(new WebSocketMessage(actionTypeEnum.START_GAME,gameId).toString())
+    GameRoom.startGame()
     isGameStarted.value = true
 }
 
@@ -217,6 +230,7 @@ const particlesOptions = {
 
                 <h1 class="text-2xl mt-10">Are you ready ?</h1>
                 <UButton @click="startGame" color="green" size="xl">Start</UButton>
+                <game-player-online />
 
 
             </UDashboardPanelContent>
@@ -229,8 +243,8 @@ const particlesOptions = {
                         <p>Question : {{ gameStore.currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
 
                     </template>
-                    <game-question-item v-if="currentQuestion && !awaitUsers" v-model="currentQuestion" :key="currentQuestion.id"
-                        @answer="getAnswer(currentQuestion, $event)"></game-question-item>
+                    <game-question-item v-if="currentQuestion && !awaitUsers" v-model="currentQuestion"
+                        :key="currentQuestion.id" @answer="getAnswer(currentQuestion, $event)"></game-question-item>
                     <game-player-ready v-if="awaitUsers" />
 
                 </u-card>
