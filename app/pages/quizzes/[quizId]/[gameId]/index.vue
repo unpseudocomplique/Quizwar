@@ -27,7 +27,9 @@ const gameId = route.params.gameId as string
 const GameRoom = new Room(send, gameId)
 
 provide('GameRoom', GameRoom)
-GameRoom.join()
+GameRoom.join(user.value)
+
+gameStore.addPlayer(user.value)
 
 watch(() => data.value, (newValue) => {
     const parsed = JSON.parse(newValue)
@@ -48,7 +50,15 @@ watch(() => data.value, (newValue) => {
     if(parsed.type === actionTypeEnum.PLAYER_READY) {
         managePlayersReady(parsed.player);
     }
+    if (parsed.type === actionTypeEnum.CLOSE) {
+        gameStore.players = gameStore.players.filter(player => player.player.id === parsed.playerId)
+    }
 }, { deep: true })
+
+
+onBeforeUnmount(() => {
+    GameRoom.close(user.value.id)
+})
 
 
 const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
@@ -79,7 +89,7 @@ const { text, copy, copied, isSupported } = useClipboard({ source: game.value.di
 
 onMounted(() => {
     const isDev = window.location.href.includes('localhost')
-    // if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 4)
+    if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
 })
 
 watch(text, () => {
@@ -220,6 +230,7 @@ const particlesOptions = {
 
                 <h1 class="text-2xl mt-10">Are you ready ?</h1>
                 <UButton @click="startGame" color="green" size="xl">Start</UButton>
+                <game-player-online />
 
 
             </UDashboardPanelContent>
@@ -232,8 +243,8 @@ const particlesOptions = {
                         <p>Question : {{ gameStore.currentQuestionIndex + 1 }} / {{ game.quiz.questions.length }}</p>
 
                     </template>
-                    <game-question-item v-if="currentQuestion && !awaitUsers" v-model="currentQuestion" :key="currentQuestion.id"
-                        @answer="getAnswer(currentQuestion, $event)"></game-question-item>
+                    <game-question-item v-if="currentQuestion && !awaitUsers" v-model="currentQuestion"
+                        :key="currentQuestion.id" @answer="getAnswer(currentQuestion, $event)"></game-question-item>
                     <game-player-ready v-if="awaitUsers" />
 
                 </u-card>

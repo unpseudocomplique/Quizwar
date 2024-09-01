@@ -46,8 +46,8 @@ export class Room {
         this.room = room
     }
 
-    join() {
-        this.send(getGameEventMessage(actionTypeEnum.JOIN, this.room, undefined))
+    join(user) {
+        this.send(getGameEventMessage(actionTypeEnum.JOIN, this.room, { player: user }))
     }
 
     startGame() {
@@ -64,6 +64,10 @@ export class Room {
 
     usePower(power: TPostedPower) {
         this.send(getGameEventMessage(actionTypeEnum.POWER_USED, this.room, { power: power }))
+    }
+
+    close(playerId: string) {
+        this.send(getGameEventMessage(actionTypeEnum.CLOSE, this.room, { playerId }))
     }
 }
 
