@@ -54,7 +54,7 @@ const requestScore = useFetch(`/api/game/${gameId}/score`)
 
 const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
 
-game.value.quiz.questions = game.value.quiz.questions.slice(0, 5)
+//game.value.quiz.questions = game.value.quiz.questions.slice(0, 5)
 
 gameStore.game = game.value
 
