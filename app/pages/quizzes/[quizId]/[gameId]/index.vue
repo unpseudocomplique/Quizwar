@@ -254,7 +254,8 @@ const particlesOptions = {
                         <p>Comment se déroule la partie a la question : {{ gameStore.currentQuestionIndex + 1 }} ?</p>
 
                     </template>
-                    <game-score-table />
+                    <!-- <game-score-table /> -->
+                    <game-score :game-id="gameId" />
 
                 </u-card>
 

@@ -44,7 +44,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="flex flex-col gap-4 h-full overflow-auto">
+    <div class="flex flex-col gap-4 h-full overflow-auto w-full">
 
         <UAccordion :items="gameScore" multiple>
             <template #default="{ item }">
