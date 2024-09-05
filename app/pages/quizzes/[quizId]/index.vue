@@ -18,15 +18,21 @@ const stateCreateRoom = ref({
 })
 async function onSubmitCreateRoom(event: FormSubmitEvent<TSchemaCreateRoom>) {
     stateCreateRoom.value.creating = true
-    const responseCreation = await $fetch('/api/game/create', {
-        method: 'POST',
-        body: {
-            ...stateCreateRoom.value,
-            quizId
-        }
-    })
-    const router = useRouter()
-    await router.push(`/quizzes/${quizId}/${responseCreation.id}`)
+    try {
+
+        const responseCreation = await $fetch('/api/game/create', {
+            method: 'POST',
+            body: {
+                ...stateCreateRoom.value,
+                quizId
+            }
+        })
+        const router = useRouter()
+        await router.push(`/quizzes/${quizId}/${responseCreation.id}`)
+    } catch (e) {
+        const toast = useToast()
+        toast.add({ title: 'Game already exists', icon: 'i-heroicons-exclamation-circle', color: 'red' })
+    }
     stateCreateRoom.value.creating = false
 }
 
