@@ -1,4 +1,11 @@
 export default defineEventHandler(async (event) => {
+    const { user } = await requireUserSession(event)
+
+    const adminEmails = ['mathnewph@gmail.com']
+
+    if (!adminEmails.includes(user.email)) {
+        setResponseStatus(event, 400, 'You are not allowed to seed')
+    }
     // Suppression des anciennes données
     await prisma.questionLabel.deleteMany({});
     await prisma.quizQuestion.deleteMany({});
