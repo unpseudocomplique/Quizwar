@@ -4,6 +4,8 @@ import { WebSocketMessage, actionTypeEnum } from '@/utils/websocket';
 
 const runtimeConfig = useRuntimeConfig()
 
+const { data: themes } = await useFetch('/api/theme')
+
 // In prod: check if secure, then use wss://
 const { status, data, send, open, close } = useWebSocket(`${runtimeConfig.public.websocket}/api/quiz/websocket`)
 // const websocket = useWebSocket(`ws://${runtimeConfig.public.domain}/api/quiz/1/websocket`)
@@ -64,6 +66,15 @@ const createQuiz = async () => {
 
       </UDashboardNavbar>
       <UDashboardPanelContent class="flex flex-col items-center justify-center gap-4">
+
+        <div class="flex gap-4 flex-wrap">
+          <u-card v-for="theme in themes" :key="theme.id">
+            <p>{{ theme.display }}</p>
+          </u-card>
+        </div>
+
+
+
         <div class="flex gap-4 flex-wrap">
 
           <u-input v-model="quizTheme" placeholder="Topic" size="xl" />
