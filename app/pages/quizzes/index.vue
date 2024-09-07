@@ -46,6 +46,8 @@ const onSubmitJoin = async (event: FormSubmitEvent<TSchemaJoinRoom>) => {
   stateJoinRoom.value.joining = false
 }
 
+const defaultImage = 'https://s3.quizwar.app/default/roy.webp'
+
 </script>
 
 <template>
@@ -54,11 +56,11 @@ const onSubmitJoin = async (event: FormSubmitEvent<TSchemaJoinRoom>) => {
       <UDashboardNavbar title="Home">
 
       </UDashboardNavbar>
-      <UDashboardPanelContent class="flex flex-col items-center justify-center gap-4">
-        <u-card>
+      <UDashboardPanelContent class="flex flex-col gap-4">
+        <u-card class="w-[400px] max-w-full">
           <template #header>
 
-            <h2 class="text-4xl">Join an existing game</h2>
+            <h2 class="text-2xl">Join an existing game</h2>
           </template>
 
           <u-form :schema="schemaJoinRoom" :state="stateJoinRoom" class="flex gap-2 items-end" @submit="onSubmitJoin">
@@ -71,10 +73,24 @@ const onSubmitJoin = async (event: FormSubmitEvent<TSchemaJoinRoom>) => {
             </u-button>
           </u-form>
         </u-card>
+        <div class="flex gap-4 flex-wrap">
 
-        <nuxt-link v-for="quiz in quizzes" :to="`/quizzes/${quiz.id}`" class="hover:underline text-2xl">
-          {{ quiz.display }}
-        </nuxt-link>
+          <u-card class="w-[500px] max-w-full" v-for="quiz in quizzes" :key="quiz.id">
+            <template #header>
+              <nuxt-img :src="quiz.picture || defaultImage" class="w-full rounded-xl" />
+            </template>
+            <h2 class="text-2xl font-bold mb-2">{{ quiz.display }}</h2>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">
+              {{ quiz.description }}
+            </p>
+            <div class="flex justify-end items-end h-full mt-auto">
+
+              <nuxt-link class="text-end" :to="`/quizzes/${quiz.id}`">
+                Create a game
+              </nuxt-link>
+            </div>
+          </u-card>
+        </div>
 
       </UDashboardPanelContent>
 

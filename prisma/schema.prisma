@@ -19,6 +19,7 @@ model Quiz {
   isDeleted Boolean        @default(false)
   isActive  Boolean        @default(true)
   picture   String?
+  description String?
   questions QuizQuestion[]
   Game      Game[]
   themes    QuizTheme[]

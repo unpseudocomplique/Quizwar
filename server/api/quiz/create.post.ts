@@ -85,6 +85,7 @@ const QuestionSchema = z.object({
 const QuizSchema = z.object({
     display: z.string(),
     questions: z.array(QuestionSchema),
+    description: z.string().describe('Description du quiz, tel une affiche de film la description doit donner envie de jouer. Le texte doit être court et concis. Il faudrait environ 25 mots'),
     themes: z.array(ThemeSchema)
 });
 
@@ -156,7 +157,7 @@ export default defineEventHandler(async (event) => {
         const quiz = await quizParsedToPrismaCreate(quizParsed, { themes: themesResponse })
         const quizCreated = await prisma.quiz.create({ data: quiz, include: { questions: { include: { question: { include: { answers: true } } } } } })
 
-        console.log('------ response: ', quizCreated)
+        console.log('------ quiz created ------')
 
         return quizCreated
     } catch (error) {

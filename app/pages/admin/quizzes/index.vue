@@ -49,6 +49,46 @@ const createQuiz = async () => {
     isLoadingQuiz.value = false
 }
 
+const createLotOfQuiz = async () => {
+    try {
+        const allThemes = [
+            "Histoire mondiale",
+            "Géographie et capitales",
+            "Culture générale",
+            "Sciences et découvertes",
+            "Cinéma et séries TV",
+            "Musique et artistes célèbres",
+            "Technologie et innovations",
+            "Mathématiques et logique",
+            "Littérature classique et contemporaine",
+            "Sports et athlètes célèbres",
+            "Nature et environnement",
+            "Mythologie et légendes",
+            "Cuisine et gastronomie",
+            "Art et artistes célèbres",
+            "Langues et expressions idiomatiques",
+            "Culture pop des années 80 et 90",
+            "Jeux vidéo et eSports",
+            "Animaux et leur habitat",
+            "Politique et gouvernance",
+            "Événements et inventions marquants"
+        ]
+        isLoadingQuiz.value = true
+        allThemes.forEach(theme => {
+            $fetch('/api/quiz/create', {
+                method: 'POST',
+                query: { topic: theme, modelType: modelSelected.value }
+            })
+        })
+        alert('Quiz created')
+    } catch (e) {
+        console.log(e)
+        alert('error')
+    }
+    isLoadingQuiz.value = false
+}
+
+
 </script>
 
 <template>
@@ -70,6 +110,10 @@ const createQuiz = async () => {
                     <u-input v-model="quizTheme" placeholder="Topic" size="xl" />
                     <u-button @click="createQuiz" size="xl" :disabled="isLoadingQuiz">
                         Create quiz
+                    </u-button>
+
+                    <u-button class="ml-auto" @click="createLotOfQuiz" size="xl" :disabled="isLoadingQuiz">
+                        Create lot of predefined quiz
                     </u-button>
                 </div>
             </template>
