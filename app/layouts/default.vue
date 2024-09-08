@@ -6,7 +6,15 @@ const appConfig = useAppConfig()
 const { isHelpSlideoverOpen } = useDashboard()
 
 const { loggedIn, user, session, fetch, clear } = useUserSession()
+onMounted(() => {
+  const isDev = window.location.href.includes('localhost')
+  if (isDev) return
 
+  const nuxtApp = useNuxtApp();
+  nuxtApp.$tracker.identify(user.value.email, {
+    username: user.value.username,
+  });
+})
 
 const links = [
   {
