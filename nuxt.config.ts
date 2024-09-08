@@ -62,7 +62,8 @@ export default defineNuxtConfig({
     minioPassword: undefined,
     public: {
       domain: 'localhost:3000',
-      websocket: 'ws://localhost:3000'
+      websocket: 'ws://localhost:3000',
+      openreplayProjectKey: ''
     }
   },
   compatibilityDate: '2024-07-11',
