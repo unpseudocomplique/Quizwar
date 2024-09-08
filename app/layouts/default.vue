@@ -11,9 +11,9 @@ onMounted(() => {
   if (isDev) return
 
   const nuxtApp = useNuxtApp();
-  nuxtApp.$tracker.identify(user.value.email, {
-    username: user.value.username,
-  });
+  if (user.value) {
+    nuxtApp.$tracker.setUserID(user.value.email)
+  }
 })
 
 const links = [
