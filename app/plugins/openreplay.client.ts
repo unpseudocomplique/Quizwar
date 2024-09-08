@@ -3,7 +3,7 @@ import Tracker from '@openreplay/tracker';
 export default defineNuxtPlugin((nuxtApp) => {
     let config = useRuntimeConfig().public
 
-
+    console.log('config', config)
     const tracker = new Tracker({
         projectKey: config.openreplayProjectKey as string, // Remplacez par votre clé de projet OpenReplay
     });
