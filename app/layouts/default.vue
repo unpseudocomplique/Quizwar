@@ -5,7 +5,6 @@ const router = useRouter()
 const appConfig = useAppConfig()
 const { isHelpSlideoverOpen } = useDashboard()
 
-
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
 
@@ -13,8 +12,14 @@ const links = [
   {
     id: 'quizzes',
     label: 'Quizzes',
-    icon: 'i-heroicons-home',
+    icon: 'i-ph-clipboard-text-thin',
     to: '/quizzes'
+  },
+  {
+    id: 'themes',
+    label: 'Themes',
+    icon: 'i-ph-flask-duotone',
+    to: '/'
   }
 ]
 

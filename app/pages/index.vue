@@ -18,71 +18,24 @@ watch(() => data.value, (newValue) => {
   history.value.push(`server : ${newValue}`)
 })
 
-
-const room = ref('');
-const connectToRoom = async () => {
-  try {
-    const game = await $fetch(`/api/game/gameDisplay/${room.value}/checkGame`)
-
-    const router = useRouter()
-    await router.push(`/quizzes/${game.quizId}/${game.id}`)
-
-  }catch(e) {
-    const toast = useToast()
-    toast.add({ title: 'Game not found', icon: 'i-heroicons-exclamation-circle', color: 'red' })
-  }
-}
-
-const sendMessage = async () => {
-  send(new WebSocketMessage(actionTypeEnum.MESSAGE, room.value, message.value).toString())
-  message.value = ''
-}
+const defaultImage = 'https://s3.quizwar.app/default/roy.webp'
 
 </script>
 
 <template>
   <UDashboardPage>
     <UDashboardPanel grow>
-      <UDashboardNavbar title="Home">
+      <UDashboardNavbar title="Choose a theme">
 
       </UDashboardNavbar>
-      <UDashboardPanelContent class="flex flex-col items-center justify-center gap-4">
-
+      <UDashboardPanelContent>
         <div class="flex gap-4 flex-wrap">
-          <u-card v-for="theme in themes" :key="theme.id">
-            <p>{{ theme.display }}</p>
+          <u-card v-for="theme in themes" :key="theme.id" ui="{ body: { base: 'flex flex-col gap-4' } }"
+            class="w-[400px] max-w-[700px] grow">
+            <nuxt-img :src="theme.picture || defaultImage" class="w-full rounded-xl" />
+            <h2 class="text-xl">{{ theme.display }}</h2>
+            <p class="text-xs text-gray-500 dark:text-gray-400">{{ theme._count.quizzes }} quizzes</p>
           </u-card>
-        </div>
-
-
-
-
-
-        <u-button to="/quizzes" size="xl">
-          Select a quiz
-        </u-button>
-        <h1>websocket</h1>
-
-        <pre>
-          {{ data }}
-        </pre>
-        <pre>
-          {{ status }}
-        </pre>
-
-        <form @submit.prevent="connectToRoom">
-          <input v-model="room" />
-          <button type="submit">Join room</button>
-        </form>
-
-        <form @submit.prevent="sendMessage">
-          <input v-model="message" />
-          <button type="submit">Send message</button>
-        </form>
-
-
-        <div>
-          <p v-for="entry in history">{{ entry }}</p>
         </div>
       </UDashboardPanelContent>
     </UDashboardPanel>
