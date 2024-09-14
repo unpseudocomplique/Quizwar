@@ -1,8 +1,8 @@
 
 import { z } from "zod";
-import { OpenAI, OpenAIEmbeddings } from "@langchain/openai";
+import { OpenAI, ChatOpenAI } from "@langchain/openai";
 
-import { ChatVertexAI, VertexAIEmbeddings } from "@langchain/google-vertexai-web"
+import { VertexAI } from "@langchain/google-vertexai"
 import { RunnableSequence, RunnablePassthrough } from "@langchain/core/runnables";
 import { StructuredOutputParser } from "langchain/output_parsers";
 import { PromptTemplate } from "@langchain/core/prompts";
@@ -91,14 +91,15 @@ const QuizSchema = z.object({
 
 const getModel = (modelType: 'openAi' | 'vertexAI') => {
     if (modelType === 'openAi') {
-        return new OpenAI({
-            model: "gpt-4o-2024-08-06",
+        return new ChatOpenAI({
+            model: "gpt-4o",
         })
     }
-    return new ChatVertexAI({
+    return new VertexAI({
         model: "gemini-1.5-pro",
         temperature: 0,
         maxRetries: 2,
+        endpoint: "v1/chat/completions"
     });
 }
 
