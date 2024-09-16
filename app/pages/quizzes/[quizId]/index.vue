@@ -30,6 +30,7 @@ async function onSubmitCreateRoom(event: FormSubmitEvent<TSchemaCreateRoom>) {
         const router = useRouter()
         await router.push(`/quizzes/${quizId}/${responseCreation.id}`)
     } catch (e) {
+        console.log(e)
         const toast = useToast()
         toast.add({ title: 'Game already exists', icon: 'i-heroicons-exclamation-circle', color: 'red' })
     }

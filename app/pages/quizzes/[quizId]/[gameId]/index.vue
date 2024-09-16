@@ -102,6 +102,7 @@ const isGameOver = ref(false)
 const isGameStarted = ref(false)
 const showScore = ref(false)
 const awaitUsers = ref(false);
+const isSettingsOpen = ref(false)
 
 const isLastQuestion = computed(() => gameStore.currentQuestionIndex === game.value.quiz.questions.length - 1)
 
@@ -214,10 +215,18 @@ const particlesOptions = {
     <UDashboardPage>
         <UDashboardPanel grow>
             <UDashboardNavbar title="Home">
+                <template #right>
+                    <UButton @click="isSettingsOpen = true" variant="soft">
+                        Settings
+                        <Icon name="i-ph-gear-six-light" class="text-xl" />
+                    </UButton>
+                </template>
             </UDashboardNavbar>
 
             <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
-
+                <u-slideover v-model="isSettingsOpen">
+                    <game-settings v-model="game" />
+                </u-slideover>
                 <p class="cursor-pointer text-xl" @click="copy(game.display)">Game code : {{ game.display }} <icon
                         name="i-ph-clipboard-text-thin"></icon>
                 </p>

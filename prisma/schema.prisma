@@ -14,15 +14,15 @@ datasource db {
 }
 
 model Quiz {
-  id        String         @id @default(cuid())
-  display   String
-  isDeleted Boolean        @default(false)
-  isActive  Boolean        @default(true)
-  picture   String?
+  id          String         @id @default(cuid())
+  display     String
+  isDeleted   Boolean        @default(false)
+  isActive    Boolean        @default(true)
+  picture     String?
   description String?
-  questions QuizQuestion[]
-  Game      Game[]
-  themes    QuizTheme[]
+  questions   QuizQuestion[]
+  Game        Game[]
+  themes      QuizTheme[]
 }
 
 model Theme {
@@ -98,24 +98,42 @@ model QuestionLabel {
 }
 
 model Game {
-  id           String         @id @default(cuid())
+  id           String          @id @default(cuid())
   display      String
   quizId       String
-  createdAt    DateTime       @default(now())
-  isActive     Boolean        @default(true)
-  quiz         Quiz           @relation(fields: [quizId], references: [id])
+  createdAt    DateTime        @default(now())
+  isActive     Boolean         @default(true)
+  quiz         Quiz            @relation(fields: [quizId], references: [id])
   players      PlayerGame[]
   PlayerAnswer PlayerAnswer[]
   UsedPower    UsedPower[]
+  parameters   GameParameter[] // Relation to the new GameParameter model
+}
+
+model GameParameter {
+  id         String        @id @default(cuid())
+  gameId     String
+  parameter  ParameterType
+  value      String?
+  rangeStart Int
+  rangeEnd   Int
+  game       Game          @relation(fields: [gameId], references: [id])
+
+  @@index([gameId])
+}
+
+enum ParameterType {
+  FASTER_RESPONSE_MORE_POINTS
+  POINTS_X5
 }
 
 model Player {
-  id        String         @id @default(cuid())
-  picture   String
-  username  String
-  email     String         @unique
-  games     PlayerGame[]
-  answers   PlayerAnswer[]
+  id             String         @id @default(cuid())
+  picture        String
+  username       String
+  email          String         @unique
+  games          PlayerGame[]
+  answers        PlayerAnswer[]
   powersUsed     UsedPower[]    @relation("OriginPlayerRelation")
   powersReceived UsedPower[]    @relation("TargetPlayerRelation")
 }
@@ -125,9 +143,9 @@ model PlayerGame {
   gameId     String
   isFinished Boolean @default(false)
   gameScore  Decimal @default(0)
-  
-  player     Player  @relation(fields: [playerId], references: [id])
-  game       Game    @relation(fields: [gameId], references: [id])
+
+  player Player @relation(fields: [playerId], references: [id])
+  game   Game   @relation(fields: [gameId], references: [id])
 
   @@id([playerId, gameId])
 }

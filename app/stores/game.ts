@@ -4,6 +4,18 @@ export enum PowerType {
     BLOCK = 'BLOCK',
     DOUBLE_POINTS = 'DOUBLE_POINTS'
 }
+
+
+export enum ParameterGameMode {
+    FASTER_RESPONSE_MORE_POINTS = 'FASTER_RESPONSE_MORE_POINTS',
+    POINTS_X5 = 'POINTS_X5',
+}
+
+export const parameterGameModeDisplay = {
+    [ParameterGameMode.FASTER_RESPONSE_MORE_POINTS]: 'FastPass',
+    [ParameterGameMode.POINTS_X5]: 'X5'
+}
+
 export const useGameStore = defineStore('game', {
     state: () => {
 

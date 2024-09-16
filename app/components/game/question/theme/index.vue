@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { timeline } from "motion"
-import { TransitionPresets, useTransition, executeTransition } from '@vueuse/core'
 import { PowerType } from '~/stores/game'
 
 const question = defineModel()
