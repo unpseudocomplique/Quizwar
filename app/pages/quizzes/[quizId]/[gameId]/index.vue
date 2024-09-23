@@ -88,8 +88,8 @@ const { text, copy, copied, isSupported } = useClipboard({ source: game.value.di
 
 
 onMounted(() => {
-    const isDev = window.location.href.includes('localhost')
-    if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
+    // const isDev = window.location.href.includes('localhost')
+    // if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
 })
 
 watch(text, () => {
@@ -223,11 +223,12 @@ const particlesOptions = {
                 </template>
             </UDashboardNavbar>
 
-            <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center justify-center gap-4">
-                <u-slideover v-model="isSettingsOpen">
-                    <game-settings v-model="game" />
-                </u-slideover>
-                <p class="cursor-pointer text-xl" @click="copy(game.display)">Game code : {{ game.display }} <icon
+            <UDashboardPanelContent v-if="!isGameStarted" class="flex flex-col items-center gap-4">
+                <!-- <u-slideover v-model="isSettingsOpen">
+                </u-slideover> -->
+                <!-- <game-settings v-model="game" /> -->
+                <game-setup-questions v-model="game" />
+                <p class="cursor-pointer text-xl mt-28" @click="copy(game.display)">Game code : {{ game.display }} <icon
                         name="i-ph-clipboard-text-thin"></icon>
                 </p>
                 <p class="text-gray-400">or share this game</p>

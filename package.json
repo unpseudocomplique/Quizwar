@@ -12,6 +12,7 @@
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.5",
     "@formkit/auto-animate": "^0.8.2",
     "@iconify-json/heroicons": "^1.1.23",
     "@iconify-json/simple-icons": "^1.1.111",
