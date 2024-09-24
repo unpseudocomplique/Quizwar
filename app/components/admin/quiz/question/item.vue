@@ -59,8 +59,7 @@ const editQuestion = async () => {
             <p v-if="!editQuestionDisplay" @click="editQuestionDisplay = true">{{ question.question.display }}</p>
             <form v-else @submit.prevent="editQuestion" class="flex gap-2 flex-wrap grow">
 
-                <u-input class="grow" v-model="question.question.display" placeholder="Question" size="xl"
-                    @keyup.enter="editQuestion" />
+                <u-input class="grow" v-model="question.question.display" placeholder="Question" size="xl" />
                 <u-button type="submit" color="black" label="Save" />
                 <u-button @click="editQuestionDisplay = false" color="white" label="Cancel" />
             </form>
