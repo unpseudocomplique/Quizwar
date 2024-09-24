@@ -12,6 +12,7 @@
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "@floating-ui/vue": "^1.1.5",
     "@formkit/auto-animate": "^0.8.2",
     "@iconify-json/heroicons": "^1.1.23",
     "@iconify-json/simple-icons": "^1.1.111",
@@ -35,7 +36,7 @@
     "howler": "^2.2.4",
     "minio": "^8.0.1",
     "motion": "^10.18.0",
-    "nuxt": "^3.12.4",
+    "nuxt": "^3.13.2",
     "nuxt-auth-utils": "^0.3.2",
     "openai": "^4.57.1",
     "pinia": "^2.2.2",

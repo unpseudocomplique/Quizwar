@@ -4,7 +4,7 @@ import { ChatOpenAI } from "@langchain/openai";
 
 import { VertexAI } from "@langchain/google-vertexai"
 import { RunnableSequence } from "@langchain/core/runnables";
-import { StructuredOutputParser } from "langchain/output_parsers";
+import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { PromptTemplate } from "@langchain/core/prompts";
 
 
