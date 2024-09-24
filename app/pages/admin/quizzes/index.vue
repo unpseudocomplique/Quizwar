@@ -93,7 +93,7 @@ const createLotOfQuiz = async () => {
 
 <template>
     <div class="p-4 grow">
-        <UTabs :items="items" class="w-full">
+        <UTabs :items="items" class="w-full max-h-full">
             <template #quizzes="{ item }">
                 <admin-quiz-list />
             </template>

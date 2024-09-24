@@ -1,3 +1,5 @@
+
+import type { TGame } from '~/../types/game'
 export enum PowerType {
     FIFTY_FIFTY = 'FIFTY_FIFTY',
     STEAL_POINTS = 'STEAL_POINTS',
@@ -19,7 +21,7 @@ export const parameterGameModeDisplay = {
 export const useGameStore = defineStore('game', {
     state: () => {
 
-        const game = ref(null)
+        const game = ref<TGame>(null)
         const players = ref([])
         const currentQuestionIndex = ref(0)
         const usedPowers = ref([])

@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useClipboard } from '@vueuse/core'
 import { useShare } from '@vueuse/core'
+import type { TGame } from '~/../types/game'
 
 const { share } = useShare()
 
@@ -15,6 +16,7 @@ const { loggedIn, user, session, fetch, clear } = useUserSession()
 onMounted(() => {
     $fetch(`/api/game/${gameId}/addPlayer`, { method: 'POST' })
 })
+
 
 const gameStore = useGameStore()
 gameStore.resetGame()
@@ -60,12 +62,10 @@ onBeforeUnmount(() => {
     GameRoom.close(user.value.id)
 })
 
-
-const { data: dataType } = useFetch(`/api/game/fakeId`, { immediate: false })
 const requestPowers = useFetch(`/api/game/${gameId}/usedPower`)
 const requestScore = useFetch(`/api/game/${gameId}/score`)
 
-const { data: game } = await useFetch<typeof dataType.value>(`/api/game/${gameId}`)
+const { data: game } = await useFetch<TGame>(`/api/game/${gameId}`)
 
 //game.value.quiz.questions = game.value.quiz.questions.slice(0, 5)
 

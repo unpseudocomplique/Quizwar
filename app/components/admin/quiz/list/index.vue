@@ -6,7 +6,7 @@ const { data: quizzes } = await useFetch('/api/quizzes')
 
 <template>
     <div class="flex flex-col gap-4 w-full">
-        <ul class="grow">
+        <ul class="grow max-h-[80dvh] overflow-auto">
             <li class="grow" v-for="quiz in quizzes">
                 <router-link :to="`/admin/quizzes/${quiz.id}`">
                     <u-card>

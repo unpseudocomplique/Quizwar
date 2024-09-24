@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
         where: { id: gameId },
         include: {
             players: true,
+            parameters: true,
             quiz: {
                 include: {
                     questions: {
@@ -19,7 +20,7 @@ export default defineEventHandler(async (event) => {
                                 }
                             }
                         }
-                    }
+                    },
                 }
             }
         }
