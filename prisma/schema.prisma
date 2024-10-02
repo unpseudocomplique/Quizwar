@@ -59,6 +59,7 @@ model Question {
   promptPicture    String          @default("")
   questionDuration Int             @default(2)
   answerDuration   Int             @default(5)
+  order            Int             @default(0)
   isDeleted        Boolean         @default(false)
   isActive         Boolean         @default(true)
   theme            String

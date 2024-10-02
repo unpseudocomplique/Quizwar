@@ -34,13 +34,14 @@ const quizParsedToPrismaCreate = async ({ themes: themeSelected, ...quiz }, { th
             }
         },
         questions: {
-            create: quiz.questions.map(currentQuestion => {
+            create: quiz.questions.map((currentQuestion, index) => {
                 const { imagePrompt, ...question } = currentQuestion
                 question.answers.sort((a, b) => 0.5 - Math.random());
                 return {
                     question: {
                         create: {
                             ...question,
+                            order: index,
                             questionDuration: 3,
                             answerDuration: 7,
                             answers: {

@@ -12,6 +12,9 @@ export default defineEventHandler(async (event) => {
         // return { error: 'All fields (playerId, questionId, gameId, answerIds) are required and answerIds must be an array' };
         setResponseStatus(event, 400, 'All fields (playerId, questionId, gameId, answerIds) are required and answerIds must be an array')
     }
+    const question = await prisma.question.findUnique({
+        where: { id: questionId },
+    })
 
     const usedPower = prisma.usedPower.findMany({
         where: {
