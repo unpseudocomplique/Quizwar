@@ -19,7 +19,8 @@ export default defineEventHandler(async (event) => {
                 create: {
                     playerId: session.user.id,
                 }
-            }
+            },
+            authorId: session.user.id
         },
         include: {
             players: {

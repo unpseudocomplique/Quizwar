@@ -227,7 +227,7 @@ const particlesOptions = {
                 <!-- <u-slideover v-model="isSettingsOpen">
                 </u-slideover> -->
                 <!-- <game-settings v-model="game" /> -->
-                <game-setup-questions v-model="game" />
+                <game-setup-questions v-model="game" v-if="game.authorId === user.id" />
                 <p class="cursor-pointer text-xl mt-28" @click="copy(game.display)">Game code : {{ game.display }} <icon
                         name="i-ph-clipboard-text-thin"></icon>
                 </p>

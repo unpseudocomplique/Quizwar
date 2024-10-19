@@ -46,7 +46,7 @@ model QuizTheme {
 model QuizQuestion {
   quizId     String
   questionId String
-  order      Int             @default(0)
+  order      Int      @default(0)
   quiz       Quiz     @relation(fields: [quizId], references: [id])
   question   Question @relation(fields: [questionId], references: [id])
 
@@ -105,11 +105,13 @@ model Game {
   quizId       String
   createdAt    DateTime        @default(now())
   isActive     Boolean         @default(true)
+  authorId     String         // Temporarily optional
   quiz         Quiz            @relation(fields: [quizId], references: [id])
+  author       Player         @relation(fields: [authorId], references: [id])
   players      PlayerGame[]
   PlayerAnswer PlayerAnswer[]
   UsedPower    UsedPower[]
-  parameters   GameParameter[] // Relation to the new GameParameter model
+  parameters   GameParameter[] 
 }
 
 model GameParameter {
@@ -134,6 +136,7 @@ model Player {
   picture        String
   username       String
   email          String         @unique
+  createdGames   Game[]
   games          PlayerGame[]
   answers        PlayerAnswer[]
   powersUsed     UsedPower[]    @relation("OriginPlayerRelation")
