@@ -138,6 +138,7 @@ const endGameModeRange = computed({
                 <template #header>
                     <p class="subtitle" v-if="!foundGameMode">Add a game mode on questions</p>
                     <p class="subtitle" v-else>{{ foundGameMode.parameter }}</p>
+                    <p>Game : {{ gameModeId }}</p>
                 </template>
                 <div class="flex flex-col gap-2 max-h-72 overflow-y-auto p-2" v-if="!foundGameMode">
                     <u-card v-for="gameMode in gameModes" :key="gameMode.value" @click="gameMode.function">
@@ -149,16 +150,12 @@ const endGameModeRange = computed({
                 </div>
                 <div class="flex flex-col gap-2 max-h-72 overflow-y-auto p-2" v-else>
                     <div class="flex gap-2 flex-wrap">
-                        {{ availableGameModeRange[0] }}
-                        {{ endGameModeRange }}
                         <input type="number" v-model="startGameModeRange" class="grow" :min="availableGameModeRange[0]"
                             :max="Math.min(availableGameModeRange[1], endGameModeRange)" />
                         <span class="text-gray-500 dark:text-gray-400">to</span>
                         <input type="number" v-model="endGameModeRange" class="grow"
                             :min="Math.max(availableGameModeRange[0], startGameModeRange)"
                             :max="availableGameModeRange[1]" />
-                        {{ availableGameModeRange[1] }}
-                        {{ startGameModeRange }}
                     </div>
                 </div>
             </u-card>

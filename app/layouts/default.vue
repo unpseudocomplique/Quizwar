@@ -6,6 +6,7 @@ const appConfig = useAppConfig()
 const { isHelpSlideoverOpen } = useDashboard()
 
 const { loggedIn, user, session, fetch, clear } = useUserSession()
+
 onMounted(() => {
   const isDev = window.location.href.includes('localhost')
   if (isDev) return
@@ -96,7 +97,7 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
         <!-- <UDashboardSidebarLinks :links="footerLinks" /> -->
 
         <UDivider class="sticky bottom-0" />
-
+        <UColorModeSelect class="w-28" />
         <template #footer>
           <div class="flex flex-col gap-10">
 
