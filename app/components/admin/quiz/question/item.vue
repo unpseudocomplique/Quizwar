@@ -55,7 +55,8 @@ const editQuestion = async () => {
 <template>
     <li
         class="flex gap-4 justify-between items-center flex-wrap border border-gray-200 dark:border-gray-700 p-2 rounded-md">
-        <div class="flex flex-col gap-2 grow">
+        <div class="flex flex-col gap-2 grow relative">
+            <p class="absolute -top-2 -left-2 opacity-80 dark:text-gray-400 text-gray-800">{{ question.order }}</p> 
             <p v-if="!editQuestionDisplay" @click="editQuestionDisplay = true">{{ question.question.display }}</p>
             <form v-else @submit.prevent="editQuestion" class="flex gap-2 flex-wrap grow">
 

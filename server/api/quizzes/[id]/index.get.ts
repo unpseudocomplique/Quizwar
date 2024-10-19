@@ -4,6 +4,9 @@ export default defineEventHandler(async (event) => {
         where: { id },
         include: {
             questions: {
+                orderBy: {
+                    order: 'asc'
+                },
                 include: {
                     question: {
                         include: {

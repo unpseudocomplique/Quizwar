@@ -3,7 +3,6 @@ import { computed, ref, useTemplateRef } from 'vue'
 import type { TGame } from '~/../types/game'
 
 import { useFloating, autoPlacement, flip, shift, hide, size } from '@floating-ui/vue';
-import { min } from 'date-fns';
 const question = defineModel<TGame['quiz']['questions'][number]>()
 const { index } = defineProps<{
     index: number
@@ -89,9 +88,8 @@ const availableGameModeRange = computed(() => {
 
     const sortedGameMode = gameStore.game.parameters.toSorted((a, b) => a.rangeStart - b.rangeStart)
     const gameModeItemIndex = sortedGameMode.findIndex(parameter => parameter.id === foundGameMode.value.id)
-    const minStart = sortedGameMode[gameModeItemIndex - 1]?.rangeEnd || 0
-    const maxEnd = sortedGameMode[gameModeItemIndex + 1]?.rangeStart || gameStore.game.quiz.questions.length - 1
-
+    const minStart = (sortedGameMode[gameModeItemIndex - 1] ? sortedGameMode[gameModeItemIndex - 1]?.rangeEnd : -1) + 1 
+    const maxEnd = (sortedGameMode[gameModeItemIndex + 1]?.rangeStart || gameStore.game.quiz.questions.length) -1
     return [minStart + 1, maxEnd + 1]
 
 })
@@ -101,7 +99,6 @@ const startGameModeRange = computed({
         return foundGameMode.value?.rangeStart + 1
     },
     set(value) {
-        // console.log(value < availableGameModeRange.value[0] || endGameModeRange.value < value)
         if (value < availableGameModeRange.value[0] || endGameModeRange.value < value) return foundGameMode.value.rangeStart
         foundGameMode.value.rangeStart = value - 1
     }
@@ -121,13 +118,18 @@ const endGameModeRange = computed({
 </script>
 
 <template>
-    <div ref="reference" @blur="hideItem" @focus="show" @click="show"
+    <div ref="reference">
+        <div  @click="show"
         :class="{ 'border-2 border-primary-700': !isHidden, 'border-2 border-orange-700': foundGameModeIndex > -1 }"
         class="w-32 rounded-lg h-6 bg-gray-200 dark:bg-gray-700 cursor-pointer relative group">
-        <span
-            class="absolute top-1/2 left-1/2 -translate-y-1/3 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all">
-            <Icon name="i-ph:stack-plus" class=""></Icon>
-        </span>
+            <span
+            class="absolute top-1/2 left-1/2 -translate-y-1/3 -translate-x-1/2 transition-all" :class="{'opacity-0 group-hover:opacity-100': !gameStore.game.parameters[foundGameModeIndex]}">
+                <Icon v-if="!gameStore.game.parameters[foundGameModeIndex]" name="i-ph:stack-plus" class=""></Icon>
+                <p v-if="gameStore.game.parameters[foundGameModeIndex]?.parameter === 'POINTS_X5'">x5</p>
+                <p v-if="gameStore.game.parameters[foundGameModeIndex]?.parameter === 'FASTER_RESPONSE_MORE_POINTS'">Fastpass</p>
+            </span>
+            
+    </div>
         <transition name="fade-in" mode="out-in">
 
             <u-card class="z-50 w-96" ref="floating" v-if="!isHidden" :style="{
@@ -138,7 +140,6 @@ const endGameModeRange = computed({
                 <template #header>
                     <p class="subtitle" v-if="!foundGameMode">Add a game mode on questions</p>
                     <p class="subtitle" v-else>{{ foundGameMode.parameter }}</p>
-                    <p>Game : {{ gameModeId }}</p>
                 </template>
                 <div class="flex flex-col gap-2 max-h-72 overflow-y-auto p-2" v-if="!foundGameMode">
                     <u-card v-for="gameMode in gameModes" :key="gameMode.value" @click="gameMode.function">

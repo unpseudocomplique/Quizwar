@@ -8,6 +8,9 @@ export default defineEventHandler(async (event) => {
             quiz: {
                 include: {
                     questions: {
+                        orderBy: {
+                            order: 'asc'
+                        },
                         include: {
                             question: {
                                 include: {

@@ -38,10 +38,10 @@ const quizParsedToPrismaCreate = async ({ themes: themeSelected, ...quiz }, { th
                 const { imagePrompt, ...question } = currentQuestion
                 question.answers.sort((a, b) => 0.5 - Math.random());
                 return {
+                    order: index,
                     question: {
                         create: {
                             ...question,
-                            order: index,
                             questionDuration: 3,
                             answerDuration: 7,
                             answers: {
@@ -129,7 +129,7 @@ export default defineEventHandler(async (event) => {
 
     const parser = StructuredOutputParser.fromZodSchema(QuizSchema);
     const themesResponse = await prisma.theme.findMany({ where: { isActive: true, isDeleted: false } })
-
+    
 
     const model = getModel(modelType)
 

@@ -46,6 +46,7 @@ model QuizTheme {
 model QuizQuestion {
   quizId     String
   questionId String
+  order      Int             @default(0)
   quiz       Quiz     @relation(fields: [quizId], references: [id])
   question   Question @relation(fields: [questionId], references: [id])
 
