@@ -47,6 +47,7 @@ const { floatingStyles, update, placement } = useFloating(reference, floating, {
 });
 
 const hideItem = () => {
+    if (!gameModeId.value) return
     $fetch(`/api/quiz/${gameStore.game.quizId}/updateGameMode`, {
         method: 'PATCH',
         body: foundGameMode.value
