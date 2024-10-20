@@ -26,11 +26,6 @@
     "@openreplay/tracker": "^14.0.6",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
     "@pinia/nuxt": "^0.5.4",
-    "@tsparticles/preset-stars": "^3.1.0",
-    "@tsparticles/slim": "^3.5.0",
-    "@tsparticles/vue3": "^3.0.1",
-    "@unovis/ts": "^1.4.3",
-    "@unovis/vue": "^1.4.3",
     "@vueuse/nuxt": "^10.11.0",
     "date-fns": "^3.6.0",
     "howler": "^2.2.4",
@@ -39,7 +34,6 @@
     "nuxt-auth-utils": "^0.3.2",
     "openai": "^4.57.1",
     "pinia": "^2.2.2",
-    "tsparticles": "^3.5.0",
     "v-calendar": "^3.1.2",
     "zod": "^3.23.8",
     "nuxt": "latest",
@@ -61,6 +55,5 @@
     "eslint": "^9.8.0",
     "prisma": "^5.21.1",
     "vue-tsc": "^2.0.29"
-  },
-  "packageManager": "pnpm@9.12.0"
+  }
 }

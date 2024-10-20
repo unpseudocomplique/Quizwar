@@ -182,8 +182,6 @@ const shareGame = async () => {
             </UDashboardPanelContent>
 
             <UDashboardPanelContent v-else-if="!isGameOver">
-                <!-- <vue-particles id="tsparticles" class="absolute top-0 left-0 w-full h-full"
-                    :options="particlesOptions" /> -->
                 <u-card v-if="!showScore">
                     <template #header>
                         <p>Question : {{ gameStore.currentQuestionIndex + 1 }} / {{ gameStore.game.quiz.questions.length
