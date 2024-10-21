@@ -58,6 +58,13 @@ watch(() => data.value, (newValue) => {
 }, { deep: true })
 
 
+watch(() => status.value, (newValue) => {
+    if(newValue == 'CLOSED') {
+        open();
+        GameRoom.join(user.value);
+    }
+})
+
 onBeforeUnmount(() => {
     GameRoom.close(user.value.id)
 })
