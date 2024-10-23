@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { } from 'vue'
+import type { TGamePlayerAnswers } from '~~/types/game';
 
 const props = defineProps<{
     gameId: string,
     playerId: string
 }>()
 
-const { data: gameScore, status } = useFetch(`/api/game/${props.gameId}/${props.playerId}/answsers`)
+const { data: gameScore, status } = useFetch<TGamePlayerAnswers>(`/api/game/${props.gameId}/${props.playerId}/answsers`)
 
 </script>
 

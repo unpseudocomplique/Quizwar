@@ -7,7 +7,22 @@ export default defineEventHandler(async (event) => {
         include: {
             question: {
                 include: {
-                    answers: true
+                    answers: true,
+                    UsedPower: {
+                        where: {
+                            gameId,
+                            OR: [
+                                {
+                                    originPlayerId: playerId,
+                                },
+                                {
+                                    targetPlayerId: playerId,
+                                }
+                            ]
+
+
+                        },
+                    }
                 }
             }
         }
