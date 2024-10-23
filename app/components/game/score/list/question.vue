@@ -57,7 +57,7 @@ const responded = computed(() => {
                     <p>you responded: </p>
                     <p v-for="toAnswer in responded" :class="[toAnswer.isCorrect ? 'text-green-500' : 'text-red-500']">
                         {{
-                            toAnswer.display }}</p>
+    toAnswer.display }}</p>
                 </div>
             </div>
             <div>
@@ -79,6 +79,9 @@ const responded = computed(() => {
                 </UBadge>
                 <UBadge v-if="hasBeenBlocked.length" variant="soft" class="select-none">
                     Je me suis fait bloqué 🛑
+                    <template v-if="hasBeenBlocked.length > 1">
+                        ({{ hasBeenBlocked.length }} fois)
+                    </template>
                 </UBadge>
                 <UBadge v-if="blockedSomeone.length" variant="soft" class="select-none">
                     J'ai bloqué quelqu'un 👿
