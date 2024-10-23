@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { timeline, stagger } from "motion"
+import type { TGameScore } from '~~/types/game';
+import confetti from "canvas-confetti";
 
 const listItems = ref()
 
@@ -9,11 +11,8 @@ const props = defineProps<{
 }>()
 const { loggedIn, user, session, fetch, clear } = useUserSession()
 
-onMounted(async () => {
-    $fetch(`/api/game/${props.gameId}/${user.value.id}/endPlayerGame`, { method: 'PATCH' })
-})
 
-const { data: gameScore } = await useFetch(`/api/game/${props.gameId}/score`, {
+const { data: gameScore } = await useFetch<TGameScore>(`/api/game/${props.gameId}/score`, {
     transform: (data) => {
         return data.map((item, index) => {
             return {
@@ -23,6 +22,46 @@ const { data: gameScore } = await useFetch(`/api/game/${props.gameId}/score`, {
         })
     }
 })
+
+
+onMounted(async () => {
+    $fetch(`/api/game/${props.gameId}/${user.value.id}/endPlayerGame`, { method: 'PATCH' })
+    const winner = gameScore.value.find(item => item.winner)
+    if (winner.playerId === user.value.id) {
+        const duration = 5 * 1000; // 5 seconds
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        // Helper function to get a random value between a range
+        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+        const interval = window.setInterval(() => {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                return;
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+
+            // Confetti from left side
+            confetti({
+                ...defaults,
+                particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+            });
+
+            // Confetti from right side
+            confetti({
+                ...defaults,
+                particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+            });
+        }, 250);
+    }
+})
+
 
 const { isPending, start, stop } = useTimeoutFn(async () => {
     const isGameOver = await $fetch(`/api/game/${props.gameId}/closeGame`, { method: 'PATCH' })

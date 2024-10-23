@@ -95,8 +95,8 @@ const { text, copy, copied, isSupported } = useClipboard({ source: game.value.di
 
 
 onMounted(() => {
-    // const isDev = window.location.href.includes('localhost')
-    // if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
+    const isDev = window.location.href.includes('localhost')
+    if (isDev) game.value.quiz.questions = game.value.quiz.questions.slice(0, 2)
 })
 
 watch(text, () => {
@@ -134,7 +134,7 @@ const getAnswer = async (question, answers) => {
         console.log(e)
     }
 
-    if (!isLastQuestion.value && gameStore.currentQuestionIndex % 5 === 0) {
+    if (!isLastQuestion.value && gameStore.currentQuestionIndex % 4 === 0) {
         showScore.value = true
         await sleep(5000)
         showScore.value = false
